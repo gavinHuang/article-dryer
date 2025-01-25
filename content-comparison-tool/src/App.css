@@ -1,0 +1,79 @@
+/* Add these new styles */
+.input-section {
+  max-width: 800px;
+  margin: 0 auto 2rem;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  resize: vertical;
+  align-self: left;
+}
+
+.dry-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s;
+}
+
+.dry-button:hover {
+  background-color: #45a049;
+}
+
+/* Update these color properties in App.css */
+.original {
+  color: #666; /* Grey color */
+  border-left: 2px solid #ddd;
+  padding-left: 1.5rem;
+}
+
+.shortened {
+  color: #000; /* Black color */
+  padding-right: 1.5rem;
+}
+
+/* Keep highlight color contrast with grey background */
+.highlight {
+  background-color: #ffeb3b;
+  color: #000; /* Black text for highlighted words */
+  padding: 0.2em;
+  border-radius: 3px;
+}
+.comparison-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 1.5rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.error {
+  color: #ff4444;
+  padding: 20px;
+  border: 1px solid #ff4444;
+  border-radius: 4px;
+  margin: 20px;
+  text-align: center;
+}

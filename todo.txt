@@ -1,0 +1,22 @@
+summary:
+Build article dryer (summary) to reduce  time spend on information acquiring
+
+Architecture
+content feed to LLM, dryer output
+show output along side the original so user can refer back to original content. 
+
+Product
+website: content input, summary side by side
+browser plugin: 
+    select content, summary on the right side of page
+    right click on hyper link, summary on popup modal
+API based on deepseek
+no authentication, storage, history, etc. pure stateless
+
+task breakdown for phase 1
+1. test out same prompt on deepseek: ok
+2. prompt deepseek to test if there is a better UI
+3. convert prompt to API call
+4. setup API and UI to test local
+5. find best hosting options
+
