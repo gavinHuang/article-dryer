@@ -4,7 +4,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "openai": "^4.80.1"
+    "openai": "^4.80.1",
+    "vercel": "^39.3.0"
   },
   "scripts": {
     "start": "node server.js"
