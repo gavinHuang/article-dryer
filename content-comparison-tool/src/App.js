@@ -17,7 +17,7 @@ const App = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5000/api/dry', {
+      const response = await fetch('${process.env.REACT_APP_API_BASE_URL}/dry', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
