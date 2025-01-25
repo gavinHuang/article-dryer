@@ -10,7 +10,7 @@ const App = () => {
 
   // Add this before the return statement
   if (error) {
-    return <div className="error">Error: {error.message}</div>;
+    return ;
   }
   
   const handleDryIt = async () => {
@@ -39,8 +39,7 @@ const App = () => {
     }
   };
 
-  {isLoading && <div className="loading">Processing your text...</div>}
-
+ 
   return (
     <div className="App">
       <h1>Content Dryer</h1>
@@ -55,6 +54,9 @@ const App = () => {
           Dry It!
         </button>
       </div>
+      {isLoading && <div className="loading">Processing your text...</div>}
+      {error && <div className="error">Error: {error.message}</div>}
+
 
       {showComparison && (
         <div className="comparison-container">
