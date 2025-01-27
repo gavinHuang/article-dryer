@@ -7,15 +7,11 @@ const App = () => {
   const [content, setContent] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  // Add this before the return statement
-  if (error) {
-    return ;
-  }
   
   const handleDryIt = async () => {
     setIsLoading(true);
     setError(null);
+    setContent([]);
     try {
       const response = await fetch(process.env.REACT_APP_API_BASE_URL+'/dry', {
         method: 'POST',
@@ -28,11 +24,44 @@ const App = () => {
       if (!response.ok) {
         throw new Error('Failed to process text');
       }
+      // Handle streaming response
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      while (true) {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        const { done, value } = await reader.read();
+        if (done) break;
   
-      const data = await response.json();
-      setContent(data.processedContent);
+        // Decode the stream chunk
+        const chunk = decoder.decode(value, { stream: true });
+        if (chunk.trim() == '') {
+          continue;
+        }
+        const lines = chunk.trim().split('\n');
+        // filter out empty lines:
+        const parsedLines = lines.filter(Boolean).map(line => JSON.parse(line).content);
+        let content = '';    
+        content = parsedLines.join('');
+        if (content.trim().at(-1) != '}') {
+            buffer += content;
+            continue
+        }
+        // check if content is ready to be parsed as json:
+        content = buffer + content
+        const content_lines = content.split('\n').filter(Boolean);
+        for (const line of content_lines) {
+          console.log('Received JSON object:', line);
+          const parsedResponse = JSON.parse(line);
+          setContent((prevContent) => [...prevContent, parsedResponse]);
+          await new Promise((resolve) => setTimeout(resolve, 0));
+        }
+        setShowComparison(true);
+        buffer = '';
+      }
       setShowComparison(true);
     } catch (error) {
+      console.error('Error:', error);
       setError(error);
     } finally {
       setIsLoading(false);
@@ -42,7 +71,7 @@ const App = () => {
  
   return (
     <div className="App">
-      <h1>Content Dryer</h1>
+      <h1>Article Dryer</h1>
       <div className="input-section">
         <textarea
           value={inputText}

@@ -9,8 +9,8 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Text is required' });
     }
 
-    const processedContent = await processText(text);
-    res.json({ processedContent });
+    await processText(text, res);
+    // res.json({ processedContent });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: error.message || 'Internal server error' });
