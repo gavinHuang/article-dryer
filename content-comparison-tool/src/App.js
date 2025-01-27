@@ -28,38 +28,50 @@ const App = () => {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = '';
-      while (true) {
-        await new Promise((resolve) => setTimeout(resolve, 0));
+      
+      const processChunk = async () => {
         const { done, value } = await reader.read();
-        if (done) break;
-  
+        if (done) {
+          console.log('Stream ended:'+value);
+          setShowComparison(true); // Final update
+          return;
+        }
         // Decode the stream chunk
         const chunk = decoder.decode(value, { stream: true });
         if (chunk.trim() == '') {
-          continue;
+          processChunk();
+          return;
         }
         const lines = chunk.trim().split('\n');
         // filter out empty lines:
         const parsedLines = lines.filter(Boolean).map(line => JSON.parse(line).content);
         let content = '';    
         content = parsedLines.join('');
-        if (content.trim().at(-1) != '}') {
-            buffer += content;
-            continue
+        buffer += content;
+        if (buffer.indexOf('}') === -1) {
+          console.log('Received object:', content);
+          processChunk();
+          return;
         }
-        // check if content is ready to be parsed as json:
-        content = buffer + content
-        const content_lines = content.split('\n').filter(Boolean);
+        const content_lines = buffer.split('\n').filter(Boolean);
+        buffer='';
         for (const line of content_lines) {
           console.log('Received JSON object:', line);
-          const parsedResponse = JSON.parse(line);
-          setContent((prevContent) => [...prevContent, parsedResponse]);
-          await new Promise((resolve) => setTimeout(resolve, 0));
+          try{
+            const parsedResponse = JSON.parse(line);
+            setContent((prevContent) => [...prevContent, parsedResponse]);
+            setTimeout(processChunk, 0);
+            setShowComparison(true);
+          }catch (error) {
+            console.error('Error parsing JSON:', error);
+            buffer += line;
+          }
         }
+        setTimeout(processChunk, 0);
         setShowComparison(true);
-        buffer = '';
       }
       setShowComparison(true);
+      processChunk();
     } catch (error) {
       console.error('Error:', error);
       setError(error);
