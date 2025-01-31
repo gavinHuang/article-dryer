@@ -8,7 +8,7 @@ const openai = new OpenAI({
 const processText = async (text, res) => {
   try {
     // print text:
-    console.log(text);
+    console.log(">>>>input:" + text);
     const completion = await openai.chat.completions.create({
       messages: [
         {
@@ -16,8 +16,8 @@ const processText = async (text, res) => {
           content: `You will be given an article, process the content to get shorter version.
           Process it paragraph by paragraph, skip words and sentences that are non-essential to the structure and flow of meaning. 
           Return with JSONL format like this:
-          {"original": "Original text...","shortened": "Shortened text...","keywords": ["keyword1", "keyword2"]}
-          {"original": "Original text...","shortened": "Shortened text...","keywords": ["keyword1", "keyword2"]}
+          {"shortened": "Shortened text...","keywords": ["keyword1", "keyword2"]}
+          {"shortened": "Shortened text...","keywords": ["keyword1", "keyword2"]}
           ...
           Below is the article:`,
         },
