@@ -13,65 +13,32 @@ const App = () => {
     setError(null);
     setContent([]);
     try {
-      const response = await fetch(process.env.REACT_APP_API_BASE_URL+'/dry', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text: inputText }),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to process text');
+      // split inputtext into paragraphs
+      const paragraphs = inputText.split('\n\n');
+      // send 3 pragraph everytime:
+      const chunks = [];
+      for (let i = 0; i < paragraphs.length; i += 3) {
+        chunks.push(paragraphs.slice(i, i + 3).join('\n\n'));
       }
-      // Handle streaming response
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-      
-      const processChunk = async () => {
-        const { done, value } = await reader.read();
-        if (done) {
-          console.log('Stream ended:'+value);
-          setShowComparison(true); // Final update
-          return;
+      for (const chunk of chunks) {
+        // send each chunk to the API
+        // Handle streaming response
+        let buffer = '';
+        const response = await fetch(process.env.REACT_APP_API_BASE_URL+'/dry', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text: chunk }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to process text');
         }
-        // Decode the stream chunk
-        const chunk = decoder.decode(value, { stream: true });
-        if (chunk.trim() == '') {
-          processChunk();
-          return;
-        }
-        const lines = chunk.trim().split('\n');
-        // filter out empty lines:
-        const parsedLines = lines.filter(Boolean).map(line => JSON.parse(line).content);
-        let content = '';    
-        content = parsedLines.join('');
-        buffer += content;
-        if (buffer.indexOf('}') === -1) {
-          console.log('Received object:', content);
-          processChunk();
-          return;
-        }
-        const content_lines = buffer.split('\n').filter(Boolean);
-        buffer='';
-        for (const line of content_lines) {
-          console.log('Received JSON object:', line);
-          try{
-            const parsedResponse = JSON.parse(line);
-            setContent((prevContent) => [...prevContent, parsedResponse]);
-            setTimeout(processChunk, 0);
-            setShowComparison(true);
-          }catch (error) {
-            console.error('Error parsing JSON:', error);
-            buffer += line;
-          }
-        }
-        setTimeout(processChunk, 0);
-        setShowComparison(true);
+        const reader = response.body.getReader();
+        processResponseChunk(reader, buffer);
       }
-      setShowComparison(true);
-      processChunk();
+      // setShowComparison(true);
+      // processResponseChunk();
     } catch (error) {
       console.error('Error:', error);
       setError(error);
@@ -80,7 +47,49 @@ const App = () => {
     }
   };
 
- 
+  async function processResponseChunk(reader, buffer) {
+    const { done, value } = await reader.read();
+    if (done) {
+      console.log('Stream ended:' + value);
+      setShowComparison(true); // Final update
+      return;
+    }
+    // Decode the stream chunk
+    const decoder = new TextDecoder();
+    const chunk = decoder.decode(value, { stream: true });
+    if (chunk.trim() == '') {
+      processResponseChunk(reader, buffer);
+      return;
+    }
+    const lines = chunk.trim().split('\n');
+    // extract the value from "content" section in the response json
+    // filter out empty lines:
+    const parsedLines = lines.filter(Boolean).map(line => JSON.parse(line).content);
+    let content = '';
+    content = parsedLines.join('');
+    buffer += content;
+    if (buffer.indexOf('}') === -1) {
+      console.log('Received object:', content);
+      processResponseChunk(reader, buffer);
+      return;
+    }
+    console.log('current buffer:'+buffer);
+    setShowComparison(true);
+    const content_lines = buffer.split('\n').filter(Boolean);
+    buffer = '';
+    for (const line of content_lines) {
+      console.log('Received JSON object:', line);
+      try {
+        const parsedResponse = JSON.parse(line);
+        setContent((prevContent) => [...prevContent, parsedResponse]);
+        setTimeout(processResponseChunk(reader, buffer), 0);
+      } catch (error) {
+        console.error('Error parsing JSON:', error);
+        console.error('Means its still not a whole response yet');
+        buffer += line;
+      }
+    }
+  }
   return (
     <div className="App">
       <h1>Article Dryer</h1>
