@@ -13,8 +13,7 @@ const processText = async (text, res) => {
       messages: [
         {
           role: "system",
-          content: `You will be given an article, process the content to get shorter version.
-          Process it paragraph by paragraph, skip words and sentences that are non-essential to the structure and flow of meaning. 
+          content: `Understand the meaning of this paragraph, rewrite it into a shorter version with keywords. 
           Return with JSONL format like this:
           {"shortened": "Shortened text...","keywords": ["keyword1", "keyword2"]}
           {"shortened": "Shortened text...","keywords": ["keyword1", "keyword2"]}
