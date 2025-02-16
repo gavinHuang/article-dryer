@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   BookOpen, 
@@ -21,8 +20,10 @@ export const ArticleSummarizer = () => {
   const [url, setUrl] = useState('');
   const [isAllExpanded, setIsAllExpanded] = useState(false);
   const [processedContent, setProcessedContent] = useState<{ shortened: string; original: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleProcessContent = async () => {
+    setIsLoading(true);
     // Add processing logic here
     console.log('Processing content...');
     try {
@@ -94,7 +95,7 @@ export const ArticleSummarizer = () => {
       console.error('Error:', error);
       // setError(error.message);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -152,9 +153,10 @@ export const ArticleSummarizer = () => {
           <Button 
             className="flex items-center space-x-2 bg-primary hover:bg-primary/90"
             onClick={handleProcessContent}
+            disabled={isLoading}
           >
             <Wand2 className="w-4 h-4" />
-            <span>Dry It!</span>
+            <span>{isLoading ? 'Processing...' : 'Dry It!'}</span>
           </Button>
         </CardFooter>
       </Card>
