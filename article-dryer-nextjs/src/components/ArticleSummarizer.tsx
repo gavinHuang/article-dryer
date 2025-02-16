@@ -4,8 +4,6 @@ import {
   BookOpen, 
   ChevronDown, 
   ChevronRight, 
-  Type, 
-  Link,
   Wand2,
   ArrowUpDown,
   BarChart
@@ -43,6 +41,11 @@ export const ArticleSummarizer = () => {
           
           if (!response.ok) {
             throw new Error('Failed to process text');
+          }
+          
+          // Add null check for response.body
+          if (!response.body) {
+            throw new Error('Response body is null');
           }
           
           const reader = response.body.getReader();
@@ -246,12 +249,7 @@ export const ArticleSummarizer = () => {
                 <div className="space-y-4">
                   <div className="border-l-4 border-green-500 pl-4">
                     <h3 className="font-medium mb-2">Growth Opportunities</h3>
-                    <p className="text-gray-600">AI augmentation can create new "10x professionals" across industries:</p>
-                    <ul className="list-disc ml-4 mt-2 text-gray-600">
-                      <li>Software Engineering: Enhanced coding capabilities</li>
-                      <li>Data Analysis: Faster pattern recognition</li>
-                      <li>Content Creation: Accelerated production</li>
-                    </ul>
+                    
                   </div>
                 </div>
               </CardContent>
