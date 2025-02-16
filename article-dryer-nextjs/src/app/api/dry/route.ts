@@ -4,18 +4,16 @@ export async function POST(request: Request) {
   try {
     const { text } = await request.json();
     
-    // Return streaming response
-    return new NextResponse(JSON.stringify({ result: text }), {
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const response = await fetch(`${process.env.DRY_SERVER_URL}/dry`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
     });
-  } catch {  // Remove the unused error parameter
-    return new NextResponse('Error processing request', { 
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+
+    return new NextResponse(response.body, {
+      headers: response.headers
     });
+  } catch {
+    return new NextResponse('Error processing request', { status: 500 });
   }
 }

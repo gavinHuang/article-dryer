@@ -31,7 +31,7 @@ export const ArticleSummarizer = () => {
       for (const paragraph of paragraphs) {
         // Send each chunk to the API
         try {
-          const response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + '/dry', {
+          const response = await fetch('api/dry', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
