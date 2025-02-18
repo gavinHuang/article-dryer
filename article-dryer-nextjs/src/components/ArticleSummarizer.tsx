@@ -5,7 +5,8 @@ import {
   ChevronRight, 
   Wand2,
   ArrowUpDown,
-  BarChart
+  BarChart,
+  Loader2
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
@@ -155,7 +156,11 @@ export const ArticleSummarizer = () => {
             onClick={handleProcessContent}
             disabled={isLoading}
           >
-            <Wand2 className="w-4 h-4" />
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Wand2 className="w-4 h-4" />
+            )}
             <span>{isLoading ? 'Processing...' : 'Dry It!'}</span>
           </Button>
         </CardFooter>
