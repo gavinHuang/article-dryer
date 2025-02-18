@@ -124,7 +124,7 @@ export const ArticleSummarizer = () => {
           
           {inputType === 'text' ? (
             <textarea
-              className="w-full h-48 p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ${isLoading ? 'h-12' : 'h-48'}`}
               placeholder="Paste your article here..."
               value={text}
               onChange={(e) => setText(e.target.value)}
