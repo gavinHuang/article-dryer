@@ -222,6 +222,7 @@ export const ArticleSummarizer = () => {
                     dried={paragraph.shortened}
                     original={paragraph.original}
                     isAllExpanded={isAllExpanded}
+                    keywords={paragraph.keywords}
                   />
                 ))}
               </div>
