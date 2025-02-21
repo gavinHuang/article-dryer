@@ -60,7 +60,12 @@ export const ArticleSummarizer = () => {
               console.log("Processing:" + buffer);
               try {
                 const lines = buffer.split('\n');
+                buffer= '';
                 for (const line of lines) {
+                  if (line.trim() !== '' && !line.endsWith('}')) {
+                    buffer += line;
+                    continue;
+                  }
                   if (line.trim() !== '') {
                     const data = JSON.parse(line);
                     data["original"] = paragraph;
@@ -71,7 +76,6 @@ export const ArticleSummarizer = () => {
                     });
                   }
                 }
-                
               } catch (e) {
                 console.error('Error parsing JSON:', e);
               }
