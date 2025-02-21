@@ -16,25 +16,26 @@ import { InputSelector } from './InputSelector';
 import { flushSync } from 'react-dom';
 
 export const ArticleSummarizer = () => {
+  interface Paragraph {
+    original: string;
+    shortened: string;
+    keywords: string[];
+    status: string;
+  }
   const [inputType, setInputType] = useState('text');
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
   const [isAllExpanded, setIsAllExpanded] = useState(false);
-  const [processedContent, setProcessedContent] = useState<{ shortened: string; original: string }[]>([]);
+  const [processedContent, setProcessedContent] = useState<Paragraph[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleProcessContent = async () => {
     setIsLoading(true);
-    // Add processing logic here
-    console.log('Processing content...');
+    setProcessedContent([]);
     try {
-      // Split input text into paragraphs
       const paragraphs = text.split('\n\n');
       for (const paragraph of paragraphs) {
-        if (paragraph.trim() === '') {
-          continue;
-        }
-        // Send each chunk to the API
+        if (paragraph.trim() === '') continue;
         try {
           const response = await fetch('api/dry', {
             method: 'POST',
@@ -44,13 +45,8 @@ export const ArticleSummarizer = () => {
             body: JSON.stringify({ text: paragraph }),
           });
           
-          if (!response.ok) {
+          if (!response.ok || !response.body) {
             throw new Error('Failed to process text');
-          }
-          
-          // Add null check for response.body
-          if (!response.body) {
-            throw new Error('Response body is null');
           }
           
           const reader = response.body.getReader();
@@ -59,32 +55,7 @@ export const ArticleSummarizer = () => {
           
           while (true) {
             const { done, value } = await reader.read();
-            if (done) {
-              console.log("Processing:" + buffer);
-              try {
-                const lines = buffer.split('\n');
-                buffer= '';
-                for (const line of lines) {
-                  if (line.trim() !== '' && !line.endsWith('}')) {
-                    buffer += line;
-                    console.log("Buffering:" + buffer);
-                    continue;
-                  }
-                  if (line.trim() !== '') {
-                    const data = JSON.parse(line);
-                    data["original"] = paragraph;
-                    console.log("response: " + data["shortened"]);
-                    // Force the UI to update immediately
-                    flushSync(() => {
-                      setProcessedContent((prev) => [...prev, data]);
-                    });
-                  }
-                }
-              } catch (e) {
-                console.error('Error parsing JSON:', e);
-              }
-              break;
-            }
+            if (done)  break;
             const decoder = new TextDecoder();
             const chunkStr = decoder.decode(value, { stream: true });
             const lines = chunkStr.trim().split('\n');
@@ -92,6 +63,50 @@ export const ArticleSummarizer = () => {
             content = parsedLines.join('');
             buffer += content;
             console.log("Receiving:" + content);
+
+            const current_paragraph: Paragraph = {
+              original: paragraph,
+              shortened: "",
+              keywords: [],
+              status: "processing"
+            };
+
+            if (buffer.indexOf('{"shortened":') >= 0) {
+              var current_shortend = buffer.substring(
+                buffer.indexOf('{"shortened":') + '{"shortened":'.length,
+                buffer.indexOf('","keywords":') > -1 ? 
+                  buffer.indexOf('","keywords":') : 
+                  buffer.length - 1
+              ).trim();
+              // strip double quotes at start and end of value if there is any:
+              if (current_shortend.startsWith('"')) current_shortend = current_shortend.substring(1);
+              if (current_shortend.endsWith('"')) current_shortend = current_shortend.substring(0, current_shortend.length - 1);
+              current_paragraph["shortened"] = current_shortend;
+              console.log("Shortened:" + current_shortend);
+            }
+            if (buffer.indexOf('}') >= 0){
+              current_paragraph["status"] = "done";
+              const json_string = buffer.substring(
+                buffer.indexOf('{'),
+                buffer.indexOf('}') + 1
+              );
+              const obj = JSON.parse(json_string);
+              current_paragraph["keywords"]= obj["keywords"];
+              current_paragraph["shortened"]= obj["shortened"];
+              console.log("Keywords:" + obj["keywords"]);
+              buffer=buffer.substring(buffer.indexOf('}') + 1);
+            }
+            flushSync(() => {
+              setProcessedContent((prev) => {
+                if (prev.length == 0 || prev[prev.length-1]?.status === "done") {
+                  console.log("Appending:" + current_paragraph["shortened"]);
+                  return [...prev, current_paragraph];
+                } else {
+                  console.log("Updating:" + current_paragraph["shortened"]);
+                  return [...prev.slice(0, -1), current_paragraph];
+                }
+              });
+            });
             await new Promise(resolve => setTimeout(resolve, 0));
           }
         } catch (error) {
@@ -99,10 +114,8 @@ export const ArticleSummarizer = () => {
           throw error;
         }
       }
-      // setShowComparison(true);
     } catch (error) {
       console.error('Error:', error);
-      // setError(error.message);
     } finally {
       setIsLoading(false);
     }
