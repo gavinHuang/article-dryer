@@ -31,6 +31,9 @@ export const ArticleSummarizer = () => {
       // Split input text into paragraphs
       const paragraphs = text.split('\n\n');
       for (const paragraph of paragraphs) {
+        if (paragraph.trim() === '') {
+          continue;
+        }
         // Send each chunk to the API
         try {
           const response = await fetch('api/dry', {
@@ -64,12 +67,13 @@ export const ArticleSummarizer = () => {
                 for (const line of lines) {
                   if (line.trim() !== '' && !line.endsWith('}')) {
                     buffer += line;
+                    console.log("Buffering:" + buffer);
                     continue;
                   }
                   if (line.trim() !== '') {
                     const data = JSON.parse(line);
                     data["original"] = paragraph;
-                    console.log("response: " + data);
+                    console.log("response: " + data["shortened"]);
                     // Force the UI to update immediately
                     flushSync(() => {
                       setProcessedContent((prev) => [...prev, data]);
