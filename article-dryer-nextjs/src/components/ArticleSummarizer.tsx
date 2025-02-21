@@ -72,7 +72,7 @@ export const ArticleSummarizer = () => {
             };
 
             if (buffer.indexOf('{"shortened":') >= 0) {
-              var current_shortend = buffer.substring(
+              let current_shortend = buffer.substring(
                 buffer.indexOf('{"shortened":') + '{"shortened":'.length,
                 buffer.indexOf('","keywords":') > -1 ? 
                   buffer.indexOf('","keywords":') : 
