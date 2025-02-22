@@ -94,10 +94,11 @@ export const ArticleSummarizer = () => {
               current_paragraph["keywords"]= obj["keywords"];
               current_paragraph["shortened"]= obj["shortened"];
               console.log("Keywords:" + obj["keywords"]);
-              buffer=buffer.substring(buffer.indexOf('}') + 1);
+              // buffer=buffer.substring(buffer.indexOf('}') + 1);
+              buffer = buffer.replace(json_string, "");
             }
             flushSync(() => {
-              setProcessedContent((prev) => {
+              setProcessedContent((prev: Paragraph[]) => {
                 if (prev.length == 0 || prev[prev.length-1]?.status === "done") {
                   console.log("Appending:" + current_paragraph["shortened"]);
                   return [...prev, current_paragraph];
