@@ -15,6 +15,7 @@ import { ParagraphComparison } from './ParagraphComparison';
 import { InputSelector } from './InputSelector';
 import { flushSync } from 'react-dom';
 
+const debug = true;
 export const ArticleSummarizer = () => {
   interface Paragraph {
     original: string;
@@ -62,7 +63,7 @@ export const ArticleSummarizer = () => {
             const parsedLines = lines.filter(Boolean).map(line => JSON.parse(line).content);
             content = parsedLines.join('');
             buffer += content;
-            console.log("Receiving:" + content);
+            if (debug) console.log("Receiving:" + content);
 
             const current_paragraph: Paragraph = {
               original: paragraph,
@@ -82,7 +83,6 @@ export const ArticleSummarizer = () => {
               if (current_shortend.startsWith('"')) current_shortend = current_shortend.substring(1);
               if (current_shortend.endsWith('"')) current_shortend = current_shortend.substring(0, current_shortend.length - 1);
               current_paragraph["shortened"] = current_shortend;
-              console.log("Shortened:" + current_shortend);
             }
             if (buffer.indexOf('}') >= 0){
               current_paragraph["status"] = "done";
@@ -93,17 +93,19 @@ export const ArticleSummarizer = () => {
               const obj = JSON.parse(json_string);
               current_paragraph["keywords"]= obj["keywords"];
               current_paragraph["shortened"]= obj["shortened"];
-              console.log("Keywords:" + obj["keywords"]);
+              if (debug) console.log("Shortened:", JSON.stringify(obj));
               // buffer=buffer.substring(buffer.indexOf('}') + 1);
               buffer = buffer.replace(json_string, "");
             }
             flushSync(() => {
               setProcessedContent((prev: Paragraph[]) => {
+                if (debug){
+                  if (prev.length == 0) console.log("Appending for first row");
+                  if (prev[prev.length-1]?.status === "done") console.log("Appending for new row");
+                }
                 if (prev.length == 0 || prev[prev.length-1]?.status === "done") {
-                  console.log("Appending:" + current_paragraph["shortened"]);
                   return [...prev, current_paragraph];
                 } else {
-                  console.log("Updating:" + current_paragraph["shortened"]);
                   return [...prev.slice(0, -1), current_paragraph];
                 }
               });
