@@ -15,13 +15,13 @@ import { ParagraphComparison } from './ParagraphComparison';
 import { InputSelector } from './InputSelector';
 import { flushSync } from 'react-dom';
 
-const debug = true;
+const debug = false;
 export const ArticleSummarizer = () => {
   interface Paragraph {
     original: string;
     shortened: string;
     keywords: string[];
-    status: string;
+    status?: string;
   }
   const [inputType, setInputType] = useState('text');
   const [text, setText] = useState('');
@@ -34,6 +34,7 @@ export const ArticleSummarizer = () => {
     setIsLoading(true);
     setProcessedContent([]);
     try {
+      let buffer = '';
       const paragraphs = text.split('\n\n');
       for (const paragraph of paragraphs) {
         if (paragraph.trim() === '') continue;
@@ -49,67 +50,47 @@ export const ArticleSummarizer = () => {
           if (!response.ok || !response.body) {
             throw new Error('Failed to process text');
           }
-          
           const reader = response.body.getReader();
-          let buffer = '';
-          let content = '';
-          
           while (true) {
             const { done, value } = await reader.read();
-            if (done)  break;
+            if (done)  {
+              if (debug) console.log("Done one request!");
+              break;
+            }
             const decoder = new TextDecoder();
             const chunkStr = decoder.decode(value, { stream: true });
             const lines = chunkStr.trim().split('\n');
             const parsedLines = lines.filter(Boolean).map(line => JSON.parse(line).content);
-            content = parsedLines.join('');
-            buffer += content;
-            if (debug) console.log("Receiving:" + content);
+            let new_chunk = parsedLines.join('');
+            if (debug) console.log("received:", new_chunk);
 
-            const current_paragraph: Paragraph = {
-              original: paragraph,
-              shortened: "",
-              keywords: [],
-              status: "processing"
-            };
-
-            if (buffer.indexOf('{"shortened":') >= 0) {
-              let current_shortend = buffer.substring(
-                buffer.indexOf('{"shortened":') + '{"shortened":'.length,
-                buffer.indexOf('","keywords":') > -1 ? 
-                  buffer.indexOf('","keywords":') : 
-                  buffer.length - 1
-              ).trim();
-              // strip double quotes at start and end of value if there is any:
-              if (current_shortend.startsWith('"')) current_shortend = current_shortend.substring(1);
-              if (current_shortend.endsWith('"')) current_shortend = current_shortend.substring(0, current_shortend.length - 1);
-              current_paragraph["shortened"] = current_shortend;
-            }
-            if (buffer.indexOf('}') >= 0){
-              current_paragraph["status"] = "done";
-              const json_string = buffer.substring(
-                buffer.indexOf('{'),
-                buffer.indexOf('}') + 1
-              );
-              const obj = JSON.parse(json_string);
-              current_paragraph["keywords"]= obj["keywords"];
-              current_paragraph["shortened"]= obj["shortened"];
-              if (debug) console.log("Shortened:", JSON.stringify(obj));
-              // buffer=buffer.substring(buffer.indexOf('}') + 1);
-              buffer = buffer.replace(json_string, "");
-            }
-            flushSync(() => {
-              setProcessedContent((prev: Paragraph[]) => {
-                if (debug){
-                  if (prev.length == 0) console.log("Appending for first row");
-                  if (prev[prev.length-1]?.status === "done") console.log("Appending for new row");
+            function update_buffer(new_chunk:string) {
+              buffer += new_chunk
+              const responed_paragraphs = buffer.split('# Shortened');
+              let _processedContent = responed_paragraphs.filter(paragraph => paragraph.trim() !== '').map((paragraph) => {
+                const rows = paragraph.split('# Keywords');
+                const current_paragraph: Paragraph = {
+                  original: paragraph,
+                  shortened: "",
+                  keywords: [],
+                };
+                if (rows.length >= 1) {
+                  current_paragraph["shortened"] = rows[0].trim();
                 }
-                if (prev.length == 0 || prev[prev.length-1]?.status === "done") {
-                  return [...prev, current_paragraph];
-                } else {
-                  return [...prev.slice(0, -1), current_paragraph];
+                if (rows.length == 2) {
+                  current_paragraph["keywords"] = rows[1].trim().split('\n').map(line => line.replace(/^[\s-]+/, ''));
                 }
+                return current_paragraph;
               });
-            });
+              if (debug) console.log("processedContent:", _processedContent);
+              if ( new_chunk.trim().length > 0 ){
+                flushSync(() => {
+                  setProcessedContent(_processedContent);
+                });
+                
+              }
+            }
+            update_buffer(new_chunk);
             await new Promise(resolve => setTimeout(resolve, 0));
           }
         } catch (error) {
