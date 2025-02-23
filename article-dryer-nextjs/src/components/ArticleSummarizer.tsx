@@ -61,13 +61,13 @@ export const ArticleSummarizer = () => {
             const chunkStr = decoder.decode(value, { stream: true });
             const lines = chunkStr.trim().split('\n');
             const parsedLines = lines.filter(Boolean).map(line => JSON.parse(line).content);
-            let new_chunk = parsedLines.join('');
+            const new_chunk = parsedLines.join('');
             if (debug) console.log("received:", new_chunk);
 
             function update_buffer(new_chunk:string) {
               buffer += new_chunk
               const responed_paragraphs = buffer.split('# Shortened');
-              let _processedContent = responed_paragraphs.filter(paragraph => paragraph.trim() !== '').map((paragraph) => {
+              const _processedContent = responed_paragraphs.filter(paragraph => paragraph.trim() !== '').map((paragraph) => {
                 const rows = paragraph.split('# Keywords');
                 const current_paragraph: Paragraph = {
                   original: paragraph,
