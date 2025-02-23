@@ -14,10 +14,16 @@ const processText = async (text, res) => {
         {
           role: "system",
           content: `Understand the meaning of this paragraph, rewrite it into a shorter version with keywords. 
-          Return with JSONL format like this:
-          {"shortened": "Shortened text...","keywords": ["keyword1", "keyword2"]}
-          {"shortened": "Shortened text...","keywords": ["keyword1", "keyword2"]}
+          Return with markdown format like this:
+
+          # Shortened
+          Shortened text...
+
+          # Keywords
+          - keyword1
+          - keyword2
           ...
+          
           Below is the article:`,
         },
         { role: "user", content: text },
