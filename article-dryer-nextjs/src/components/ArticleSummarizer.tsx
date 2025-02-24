@@ -36,7 +36,27 @@ export const ArticleSummarizer = () => {
     try {
       let buffer = '';
       const paragraphs = text.split('\n\n');
+      const mergedParagraphs = [];
+      let tempParagraph = '';
+
       for (const paragraph of paragraphs) {
+        if ((tempParagraph + paragraph).length < 140) {
+          tempParagraph += paragraph + ' ';
+        } else {
+          if (tempParagraph) {
+            mergedParagraphs.push(tempParagraph.trim());
+            tempParagraph = '';
+          }
+          mergedParagraphs.push(paragraph);
+        }
+      }
+
+      if (tempParagraph) {
+        mergedParagraphs.push(tempParagraph.trim());
+      }
+
+      for (const paragraph of mergedParagraphs) {
+        if (debug) console.log("sending:", paragraph);
         if (paragraph.trim() === '') continue;
         try {
           const response = await fetch('api/dry', {
