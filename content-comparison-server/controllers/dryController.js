@@ -28,7 +28,7 @@ const processText = async (text, res) => {
         },
         { role: "user", content: text },
       ],
-      model: "deepseek-chat",
+      model: "gpt-4o-mini",
       stream: true,
     }
   );
