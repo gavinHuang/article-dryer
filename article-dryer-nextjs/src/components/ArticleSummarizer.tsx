@@ -15,7 +15,7 @@ import { ParagraphComparison } from './ParagraphComparison';
 import { InputSelector } from './InputSelector';
 import { flushSync } from 'react-dom';
 
-const debug = false;
+const debug = true;
 export const ArticleSummarizer = () => {
   interface Paragraph {
     original: string;
@@ -30,12 +30,12 @@ export const ArticleSummarizer = () => {
   const [processedContent, setProcessedContent] = useState<Paragraph[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleProcessContent = async () => {
+  const handleParagraphs = async (paragraphs: string[]) => {
     setIsLoading(true);
     setProcessedContent([]);
+    
     try {
       let buffer = '';
-      const paragraphs = text.split('\n\n');
       const mergedParagraphs = [];
       let tempParagraph = '';
 
@@ -123,6 +123,47 @@ export const ArticleSummarizer = () => {
     } finally {
       setIsLoading(false);
     }
+  }
+  const handleProcessContent = async () => {
+    handleParagraphs(text.split('\n\n'));
+  };
+
+  const handleProcessUrl = async () => {
+    setIsLoading(true);
+    setProcessedContent([]);
+    try {
+      // validate url
+      if (!url.startsWith('http')) {
+        throw new Error('Invalid URL');
+      }
+      // send request to https://r.jina.ai/{url}, expect response as plain text:
+
+      const response = await fetch(`https://r.jina.ai/${url}`, {
+        headers: {
+          'Accept': 'text/plain'
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to process URL');
+      }
+      const data = await response.text();
+
+      const paragraphs = data.split('\n\n').splice(0, 3).filter((paragraph: string) => !paragraph.trim().startsWith('![Image'));
+
+      //skip first 3 paragraphs
+      handleParagraphs(paragraphs.splice(3));
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const dryIt = async () => {
+    if (inputType === 'text') {
+      handleProcessContent();
+    }
+    if (inputType === 'url') {  
+      handleProcessUrl();
+    }
   };
 
   return (
@@ -178,7 +219,7 @@ export const ArticleSummarizer = () => {
         <CardFooter className="border-t bg-gray-50 p-4">
           <Button 
             className="flex items-center space-x-2 bg-primary hover:bg-primary/90"
-            onClick={handleProcessContent}
+            onClick={dryIt}
             disabled={isLoading}
           >
             {isLoading ? (
