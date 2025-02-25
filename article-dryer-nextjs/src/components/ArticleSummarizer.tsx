@@ -44,10 +44,11 @@ export const ArticleSummarizer = () => {
           tempParagraph += paragraph + ' ';
         } else {
           if (tempParagraph) {
-            mergedParagraphs.push(tempParagraph.trim());
+            mergedParagraphs.push(tempParagraph + paragraph.trim());
             tempParagraph = '';
+          }else {
+            mergedParagraphs.push(paragraph);
           }
-          mergedParagraphs.push(paragraph);
         }
       }
 
