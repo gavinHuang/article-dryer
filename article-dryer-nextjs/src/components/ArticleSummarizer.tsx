@@ -130,14 +130,18 @@ export const ArticleSummarizer = () => {
 
   const handleProcessUrl = async () => {
     setIsLoading(true);
-    setProcessedContent([]);
     try {
       // validate url
-      if (!url.startsWith('http')) {
-        throw new Error('Invalid URL');
+      try {
+        const urlObj = new URL(url);
+        if (!['http:', 'https:'].includes(urlObj.protocol)) {
+          throw new Error('URL must use HTTP or HTTPS protocol');
+        }
+      } catch {
+        setIsLoading(false);
+        throw new Error('Invalid URL format');
       }
       // send request to https://r.jina.ai/{url}, expect response as plain text:
-
       const response = await fetch(`https://r.jina.ai/${url}`, {
         headers: {
           'Accept': 'text/plain'
@@ -146,12 +150,13 @@ export const ArticleSummarizer = () => {
       if (!response.ok) {
         throw new Error('Failed to process URL');
       }
+      setProcessedContent([]);
       const data = await response.text();
 
-      const paragraphs = data.split('\n\n').splice(0, 3).filter((paragraph: string) => !paragraph.trim().startsWith('![Image'));
+      const paragraphs = data.split('\n\n').splice(3).filter((paragraph: string) => !paragraph.trim().startsWith('![Image'));
 
       //skip first 3 paragraphs
-      handleParagraphs(paragraphs.splice(3));
+      handleParagraphs(paragraphs);
     } catch (error) {
       console.error('Error:', error);
     }
