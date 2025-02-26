@@ -14,14 +14,6 @@ export const InputSelector: React.FC<InputSelectorProps> = ({
   return (
     <div className="flex space-x-2 mb-4">
       <Button
-        variant={activeInput === 'text' ? 'default' : 'outline'}
-        className="flex items-center space-x-2"
-        onClick={() => onInputChange('text')}
-      >
-        <Type className="w-4 h-4" />
-        <span>Paste Text</span>
-      </Button>
-      <Button
         variant={activeInput === 'url' ? 'default' : 'outline'}
         className="flex items-center space-x-2"
         onClick={() => onInputChange('url')}
@@ -29,6 +21,15 @@ export const InputSelector: React.FC<InputSelectorProps> = ({
         <Link className="w-4 h-4" />
         <span>Enter URL</span>
       </Button>
+      <Button
+        variant={activeInput === 'text' ? 'default' : 'outline'}
+        className="flex items-center space-x-2"
+        onClick={() => onInputChange('text')}
+      >
+        <Type className="w-4 h-4" />
+        <span>Paste Text</span>
+      </Button>
+      
     </div>
   );
 };

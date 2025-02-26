@@ -23,7 +23,7 @@ export const ArticleSummarizer = () => {
     keywords: string[];
     status?: string;
   }
-  const [inputType, setInputType] = useState('text');
+  const [inputType, setInputType] = useState('url');
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
   const [isAllExpanded, setIsAllExpanded] = useState(false);
