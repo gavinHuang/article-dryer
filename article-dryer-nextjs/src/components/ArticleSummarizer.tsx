@@ -176,7 +176,8 @@ export const ArticleSummarizer = () => {
 
   const handleCopy = async () => {
     try {
-      const textToCopy = processedContent
+      const content_prefix = inputType === 'url' ? `Source: ${url}\n\n` : "";
+      const textToCopy = content_prefix + processedContent
         .map(p => p.shortened)
         .join('\n\n');
       await navigator.clipboard.writeText(textToCopy);
