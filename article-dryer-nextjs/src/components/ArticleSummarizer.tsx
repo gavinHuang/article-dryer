@@ -239,18 +239,14 @@ export const ArticleSummarizer = () => {
       </Card>
 
       <Tabs defaultValue="summary" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="summary">Dried Content</TabsTrigger>
-          <TabsTrigger value="analysis">Analysis</TabsTrigger>
-        </TabsList>
+       
 
         <TabsContent value="summary">
-          <Card className="bg-white shadow-lg">
+            <Card className={`bg-white shadow-lg ${processedContent.length === 0 ? 'hidden' : ''}`}>
             <CardHeader className="border-b">
               <div className="flex justify-between items-center">
-                <div className="space-y-1">
+                <div className="space-y-1" >
                   <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold">Dried Version</h2>
                     <Button
                       variant="ghost"
                       size="sm"
