@@ -29,6 +29,8 @@ export const ArticleSummarizer = () => {
   const [isAllExpanded, setIsAllExpanded] = useState(false);
   const [processedContent, setProcessedContent] = useState<Paragraph[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [copyFeedback, setCopyFeedback] = useState<string>('');
+
 
   const handleParagraphs = async (paragraphs: string[]) => {
     setIsLoading(true);
@@ -172,6 +174,20 @@ export const ArticleSummarizer = () => {
     }
   };
 
+  const handleCopy = async () => {
+    try {
+      const textToCopy = processedContent
+        .map(p => p.shortened)
+        .join('\n\n');
+      await navigator.clipboard.writeText(textToCopy);
+      setCopyFeedback('Copied!');
+      setTimeout(() => setCopyFeedback(''), 2000);
+    } catch (err) {
+      console.error('Failed to copy text:', err);
+      setCopyFeedback('Failed to copy');
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-6">
       <div className="flex items-center space-x-2 mb-6">
@@ -268,9 +284,41 @@ export const ArticleSummarizer = () => {
                   </div>
                   <p className="text-sm text-gray-500">Click on any paragraph to see the original text</p>
                 </div>
-                <div className="text-sm text-gray-500">
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                <span>
                   {Math.round((processedContent.reduce((acc, p) => acc + p.shortened.length, 0) / 
-                             processedContent.reduce((acc, p) => acc + p.original.length, 0)) * 100)}% of original
+                    processedContent.reduce((acc, p) => acc + p.original.length, 0)) * 100)}% of original
+                </span>
+                  
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCopy}
+                    className="flex items-center gap-1"
+                    disabled={processedContent.length === 0}
+                  >
+                    {copyFeedback ? (
+                      <span className="text-green-600">{copyFeedback}</span>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                          />
+                        </svg>
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </Button>
                 </div>
               </div>
             </CardHeader>
