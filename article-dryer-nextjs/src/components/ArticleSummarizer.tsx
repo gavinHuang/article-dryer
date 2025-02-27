@@ -106,8 +106,8 @@ export const ArticleSummarizer = () => {
             function update_buffer(new_chunk:string) {
               buffer += new_chunk
               const responed_paragraphs = buffer.split('# Shortened');
-              const _processedContent = responed_paragraphs.filter(paragraph => paragraph.trim() !== '').map((paragraph) => {
-                const rows = paragraph.split('# Keywords');
+              const _processedContent = responed_paragraphs.filter(_paragraph => _paragraph.trim() !== '').map((_paragraph) => {
+                const rows = _paragraph.split('# Keywords');
                 const current_paragraph: Paragraph = {
                   original: paragraph,
                   shortened: "",
