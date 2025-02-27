@@ -1,10 +1,10 @@
 import { redis } from '@/lib/redis'
 import { NextResponse } from 'next/server'
-// import type { FeaturedArticle } from '@/lib/redis'
+import type { FeaturedArticle } from '@/lib/redis'
 
 export async function GET() {
   try {
-    const articles = await redis.get<string>('featured-articles')
+    const articles = await redis.get<FeaturedArticle[]>('featured-articles')
     return NextResponse.json(articles || [])
   } catch (error) {
     console.error('Failed to fetch featured articles:', error)

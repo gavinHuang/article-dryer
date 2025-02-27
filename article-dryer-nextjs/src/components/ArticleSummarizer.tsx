@@ -14,7 +14,7 @@ import { Tabs, TabsContent} from "@/components/ui/tabs";
 import { ParagraphComparison } from './ParagraphComparison';
 import { InputSelector } from './InputSelector';
 import { flushSync } from 'react-dom';
-// import type { FeaturedArticle } from '@/lib/redis'
+import type { FeaturedArticle } from '@/lib/redis'
 import { Paragraph, StreamProcessor } from '@/lib/StreamProcessor';
 const debug = true;
 
@@ -27,7 +27,7 @@ export const ArticleSummarizer = () => {
   const [processedContent, setProcessedContent] = useState<Paragraph[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [copyFeedback, setCopyFeedback] = useState<string>('');
-  const [featuredArticles, setFeaturedArticles] = useState<[]>([]);
+  const [featuredArticles, setFeaturedArticles] = useState<FeaturedArticle[]>([]);
 
   useEffect(() => {
     const fetchArticles = async () => {

@@ -1,7 +1,7 @@
 export interface Paragraph {
-    original?:string,
-    shortened?: string;
-    keywords?: string[];
+    original:string,
+    shortened: string;
+    keywords: string[];
   }
   
 export class StreamProcessor {
@@ -19,7 +19,7 @@ export class StreamProcessor {
       this.buffer += chunk;
       const record = this.getRecordForOriginal(original);
       if (!record){
-        const record: Paragraph = {original: original, shortened: ""};
+        const record: Paragraph = {original: original, shortened: "", keywords: []};
         this.parsedRecords.push(record);
       }
       this.parseRecords(original);
@@ -46,7 +46,7 @@ export class StreamProcessor {
     }
 
     parseRecord(recordString:string) {
-      const record: Paragraph = {};
+      const record: Paragraph = {original: "", shortened: "", keywords: []};
       
       const shortenedMatch = recordString.match(/# Shortened\s+([\s\S]+?)(?=\s+#|$)/);
       if (shortenedMatch) {
