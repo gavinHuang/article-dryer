@@ -6,7 +6,7 @@ export interface Paragraph {
   
 export class StreamProcessor {
     private buffer: string;
-    private parsedRecords: any[];
+    private parsedRecords: Paragraph[];
     // private originalToShortened: Map<string, string>;
 
     constructor() {

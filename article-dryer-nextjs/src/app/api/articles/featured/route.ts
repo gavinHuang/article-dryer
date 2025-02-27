@@ -1,6 +1,6 @@
 import { redis } from '@/lib/redis'
 import { NextResponse } from 'next/server'
-import type { FeaturedArticle } from '@/lib/redis'
+// import type { FeaturedArticle } from '@/lib/redis'
 
 export async function GET() {
   try {
