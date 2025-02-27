@@ -13,7 +13,8 @@ export async function POST(request: Request) {
     return new NextResponse(response.body, {
       headers: response.headers
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
     return new NextResponse('Error processing request', { status: 500 });
   }
 }

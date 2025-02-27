@@ -18,11 +18,15 @@ const processText = async (text, res) => {
 
           # Shortened
           Shortened text...
-
           # Keywords
           - keyword1
           - keyword2
-          ...
+          
+          # Shortened
+          Shortened text...
+          # Keywords
+          - keyword1
+          - keyword2
           
           Below is the article:`,
         },

@@ -15,16 +15,11 @@ import { ParagraphComparison } from './ParagraphComparison';
 import { InputSelector } from './InputSelector';
 import { flushSync } from 'react-dom';
 import type { FeaturedArticle } from '@/lib/redis'
-
+import { Paragraph, StreamProcessor } from '@/lib/StreamProcessor';
 const debug = true;
 
 export const ArticleSummarizer = () => {
-  interface Paragraph {
-    original: string;
-    shortened: string;
-    keywords: string[];
-    status?: string;
-  }
+
   const [inputType, setInputType] = useState('url');
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
@@ -37,9 +32,14 @@ export const ArticleSummarizer = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('/api/articles/featured')
-        const data = await response.json()
-        setFeaturedArticles(data)
+        fetch('/api/articles/featured')
+          .then(response => {
+            return response.json();
+          })
+          .then(data => {
+            if (debug) console.log(data);
+            setFeaturedArticles(data);
+          });
       } catch (error) {
         console.error('Failed to fetch featured articles:', error)
       }
@@ -48,32 +48,37 @@ export const ArticleSummarizer = () => {
     fetchArticles()
   }, [])
 
+  const mergeParagraphs = (paragraphs: string[]) => {
+    const mergedParagraphs = [];
+    let tempParagraph = '';
+
+    for (const paragraph of paragraphs) {
+      if ((tempParagraph + paragraph).length < 140) {
+        tempParagraph += paragraph + ' ';
+      } else {
+        if (tempParagraph) {
+          mergedParagraphs.push(tempParagraph + paragraph.trim());
+          tempParagraph = '';
+        }else {
+          mergedParagraphs.push(paragraph);
+        }
+      }
+    }
+
+    if (tempParagraph) {
+      mergedParagraphs.push(tempParagraph.trim());
+    }
+    return mergedParagraphs;
+  };
+
   const handleParagraphs = async (paragraphs: string[]) => {
     setIsLoading(true);
     setProcessedContent([]);
     
     try {
+      const mergedParagraphs = mergeParagraphs(paragraphs);
       let buffer = '';
-      const mergedParagraphs = [];
-      let tempParagraph = '';
-
-      for (const paragraph of paragraphs) {
-        if ((tempParagraph + paragraph).length < 140) {
-          tempParagraph += paragraph + ' ';
-        } else {
-          if (tempParagraph) {
-            mergedParagraphs.push(tempParagraph + paragraph.trim());
-            tempParagraph = '';
-          }else {
-            mergedParagraphs.push(paragraph);
-          }
-        }
-      }
-
-      if (tempParagraph) {
-        mergedParagraphs.push(tempParagraph.trim());
-      }
-
+      const streamProcessor = new StreamProcessor();
       for (const paragraph of mergedParagraphs) {
         if (debug) console.log("sending:", paragraph);
         if (paragraph.trim() === '') continue;
@@ -90,6 +95,7 @@ export const ArticleSummarizer = () => {
             throw new Error('Failed to process text');
           }
           const reader = response.body.getReader();
+          if (buffer) buffer += "\n\n";
           while (true) {
             const { done, value } = await reader.read();
             if (done)  {
@@ -102,34 +108,12 @@ export const ArticleSummarizer = () => {
             const parsedLines = lines.filter(Boolean).map(line => JSON.parse(line).content);
             const new_chunk = parsedLines.join('');
             if (debug) console.log("received:", new_chunk);
-
-            function update_buffer(new_chunk:string) {
-              buffer += new_chunk
-              const responed_paragraphs = buffer.split('# Shortened');
-              const _processedContent = responed_paragraphs.filter(_paragraph => _paragraph.trim() !== '').map((_paragraph) => {
-                const rows = _paragraph.split('# Keywords');
-                const current_paragraph: Paragraph = {
-                  original: paragraph,
-                  shortened: "",
-                  keywords: [],
-                };
-                if (rows.length >= 1) {
-                  current_paragraph["shortened"] = rows[0].trim();
-                }
-                if (rows.length == 2) {
-                  current_paragraph["keywords"] = rows[1].trim().split('\n').map(line => line.replace(/^[\s-]+/, ''));
-                }
-                return current_paragraph;
+            const _processedRecords = streamProcessor.processChunk(paragraph, new_chunk);
+            if ( new_chunk.trim().length > 0 ){
+              flushSync(() => {
+                setProcessedContent(_processedRecords);
               });
-              if (debug) console.log("processedContent:", _processedContent);
-              if ( new_chunk.trim().length > 0 ){
-                flushSync(() => {
-                  setProcessedContent(_processedContent);
-                });
-                
-              }
             }
-            update_buffer(new_chunk);
             await new Promise(resolve => setTimeout(resolve, 0));
           }
         } catch (error) {
@@ -137,12 +121,15 @@ export const ArticleSummarizer = () => {
           throw error;
         }
       }
+      console.log("Buffer", buffer);
     } catch (error) {
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
+      
     }
   }
+
   const handleProcessContent = async () => {
     handleParagraphs(text.split('\n\n'));
   };
@@ -174,7 +161,6 @@ export const ArticleSummarizer = () => {
 
       const paragraphs = data.split('\n\n').splice(3).filter((paragraph: string) => !paragraph.trim().startsWith('![Image'));
 
-      //skip first 3 paragraphs
       handleParagraphs(paragraphs);
     } catch (error) {
       console.error('Error:', error);
