@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, 
   ChevronDown, 
@@ -14,8 +14,10 @@ import { Tabs, TabsContent} from "@/components/ui/tabs";
 import { ParagraphComparison } from './ParagraphComparison';
 import { InputSelector } from './InputSelector';
 import { flushSync } from 'react-dom';
+import type { FeaturedArticle } from '@/lib/redis'
 
 const debug = true;
+
 export const ArticleSummarizer = () => {
   interface Paragraph {
     original: string;
@@ -30,7 +32,21 @@ export const ArticleSummarizer = () => {
   const [processedContent, setProcessedContent] = useState<Paragraph[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [copyFeedback, setCopyFeedback] = useState<string>('');
+  const [featuredArticles, setFeaturedArticles] = useState<FeaturedArticle[]>([]);
 
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch('/api/articles/featured')
+        const data = await response.json()
+        setFeaturedArticles(data)
+      } catch (error) {
+        console.error('Failed to fetch featured articles:', error)
+      }
+    }
+
+    fetchArticles()
+  }, [])
 
   const handleParagraphs = async (paragraphs: string[]) => {
     setIsLoading(true);
@@ -227,15 +243,29 @@ export const ArticleSummarizer = () => {
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
               />
-              <div className="text-sm text-gray-500">
-                Supported sources:
-                <ul className="list-disc ml-5 mt-1">
-                  <li>Medium articles</li>
-                  <li>News websites</li>
-                  <li>Blog posts</li>
-                  <li>Documentation pages</li>
-                </ul>
+              
+
+              <div className="border-t pt-4 mt-4">
+              <h3 className="text-sm font-medium mb-3">Featured Articles</h3>
+              <div className="space-y-2">
+                {featuredArticles.map((article, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setUrl(article.url)}
+                    className="w-full text-left p-2 rounded-md hover:bg-gray-100 transition-colors duration-200 group"
+                  >
+                    <div className="text-sm font-medium text-gray-800 group-hover:text-primary">
+                      {article.title}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1 flex items-center">
+                      <span>{article.source}</span>
+                      <span className="mx-2">•</span>
+                      <span className="truncate">{article.url}</span>
+                    </div>
+                  </button>
+                ))}
               </div>
+            </div>
             </div>
           )}
         </CardContent>
