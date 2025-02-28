@@ -13,7 +13,7 @@ import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { Tabs, TabsContent} from "@/components/ui/tabs";
 import { ParagraphComparison } from './ParagraphComparison';
 import { InputSelector } from './InputSelector';
-import { flushSync } from 'react-dom';
+// import { flushSync } from 'react-dom';
 import type { FeaturedArticle } from '@/lib/redis'
 import { Paragraph, StreamProcessor } from '@/lib/StreamProcessor';
 const debug = true;
