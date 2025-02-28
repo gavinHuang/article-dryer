@@ -48,6 +48,10 @@ export const ArticleSummarizer = () => {
     fetchArticles()
   }, [])
 
+  const updateProcessedContent = (records: Paragraph[]) => {
+    setProcessedContent([...records]);
+  };
+
   const mergeParagraphs = (paragraphs: string[]) => {
     const mergedParagraphs = [];
     let tempParagraph = '';
@@ -77,7 +81,6 @@ export const ArticleSummarizer = () => {
     
     try {
       const mergedParagraphs = mergeParagraphs(paragraphs);
-      let buffer = '';
       const streamProcessor = new StreamProcessor();
       for (const paragraph of mergedParagraphs) {
         if (debug) console.log("sending:", paragraph);
@@ -95,7 +98,6 @@ export const ArticleSummarizer = () => {
             throw new Error('Failed to process text');
           }
           const reader = response.body.getReader();
-          if (buffer) buffer += "\n\n";
           while (true) {
             const { done, value } = await reader.read();
             if (done)  {
@@ -108,20 +110,23 @@ export const ArticleSummarizer = () => {
             const parsedLines = lines.filter(Boolean).map(line => JSON.parse(line).content);
             const new_chunk = parsedLines.join('');
             if (debug) console.log("received:", new_chunk);
-            const _processedRecords = streamProcessor.processChunk(paragraph, new_chunk);
-            if ( new_chunk.trim().length > 0 ){
-              flushSync(() => {
-                setProcessedContent(_processedRecords);
-              });
+            
+            const changed = streamProcessor.processChunk(paragraph, new_chunk);
+            if (changed) {
+              updateProcessedContent(streamProcessor.parsedRecords);
+
+              // flushSync(() => {
+              //   setProcessedContent(streamProcessor.parsedRecords);
+              // });
+              // await new Promise(resolve => setTimeout(resolve, 0));
             }
-            await new Promise(resolve => setTimeout(resolve, 0));
           }
         } catch (error) {
           console.error('Chunk processing error:', error);
           throw error;
         }
       }
-      console.log("Buffer", buffer);
+      // if (debug) console.log("Finished processing all paragraphs:", streamProcessor.parsedRecords);
     } catch (error) {
       console.error('Error:', error);
     } finally {
