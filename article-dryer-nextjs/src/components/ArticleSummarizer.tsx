@@ -204,9 +204,38 @@ export const ArticleSummarizer = () => {
       </div>
 
       <Card className="bg-white shadow-lg">
+      <CardHeader className="border-b">
+        <h2 className="text-lg font-semibold">Featured Articles</h2>
+      </CardHeader>
+      <CardContent className="p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {featuredArticles.map((article, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setUrl(article.url);
+                setInputType('url');
+              }}
+              className="w-full text-left p-3 rounded-md border hover:bg-gray-50 transition-colors duration-200 group"
+            >
+              <div className="text-sm font-medium text-gray-800 group-hover:text-primary">
+                {article.title}
+              </div>
+              <div className="text-xs text-gray-500 mt-1 flex items-center">
+                <span>{article.source}</span>
+                <span className="mx-2">•</span>
+                <span className="truncate">{article.url}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+
+      <Card className="bg-white shadow-lg">
         <CardHeader className="border-b">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">Original Text</h2>
+            <h2 className="text-lg font-semibold">Add Content</h2>
             <div className="text-sm text-gray-500">
               {inputType === 'text' ? `${text.length} characters` : 'URL input'}
             </div>
@@ -236,27 +265,7 @@ export const ArticleSummarizer = () => {
               />
               
 
-              <div className="border-t pt-4 mt-4">
-              <h3 className="text-sm font-medium mb-3">Featured Articles</h3>
-              <div className="space-y-2">
-                {featuredArticles.map((article, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setUrl(article.url)}
-                    className="w-full text-left p-2 rounded-md hover:bg-gray-100 transition-colors duration-200 group"
-                  >
-                    <div className="text-sm font-medium text-gray-800 group-hover:text-primary">
-                      {article.title}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1 flex items-center">
-                      <span>{article.source}</span>
-                      <span className="mx-2">•</span>
-                      <span className="truncate">{article.url}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
+              
             </div>
           )}
         </CardContent>
