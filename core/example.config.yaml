@@ -1,0 +1,19 @@
+plugins:
+  - name: jina-reader
+    options:
+      skipImages: true
+  - name: text-analyzer
+    options:
+      wordCountThreshold: 150
+  - name: summarizer
+    options:
+      apiKey: ${OPENAI_API_KEY}
+      model: gpt-4
+      maxTokens: 1000
+      stream: true
+      baseURL: 'https://api.openai.com/v1/chat/completions'
+  
+globalOptions:
+  debug: true
+  language: en
+  outputMode: stream
