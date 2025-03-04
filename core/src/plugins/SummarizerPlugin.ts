@@ -9,16 +9,9 @@ export class SummarizerPlugin implements Plugin {
     if (!config.apiKey) {
       throw new Error('API key is required for SummarizerPlugin. Set OPENAI_API_KEY environment variable.');
     }
-
-    // Clean the API key
-    const cleanApiKey = config.apiKey?.trim().replace(/["'\n]/g, '');
-    if (!cleanApiKey.startsWith('sk-')) {
-      throw new Error('Invalid OpenAI API key format. Keys should start with "sk-"');
-    }
-
     try {
       this.llmClient = new LLMClient({
-        apiKey: cleanApiKey,
+        apiKey: config.apiKey,
         model: config.model || 'gpt-4',
         baseURL: config.baseURL,
         maxTokens: config.maxTokens || 1000,
