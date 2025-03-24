@@ -10,14 +10,19 @@
     "lint": "eslint src",
     "example:summarize": "ts-node examples/cli-summarize.ts",
     "example:web": "ts-node examples/web-server.ts",
-    "example:test-web": "ts-node examples/test-web-server.ts"
+    "example:test-web": "ts-node examples/test-web-server.ts",
+    "test:wordlist": "ts-node examples/test-wordlist.ts"
   },
   "dependencies": {
+    "@huggingface/transformers": "^3.4.0",
+    "axios": "^1.6.7",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "js-yaml": "^4.1.0",
+    "node-nlp": "^5.0.0-alpha.5",
     "openai": "^4.28.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "word-list": "^4.1.0"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

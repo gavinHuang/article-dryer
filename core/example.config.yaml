@@ -5,6 +5,9 @@ plugins:
   - name: text-analyzer
     options:
       wordCountThreshold: 150
+  - name: text-statistics
+    options:
+      averageWPM: 250
   - name: summarizer
     options:
       apiKey: ${OPENAI_API_KEY}

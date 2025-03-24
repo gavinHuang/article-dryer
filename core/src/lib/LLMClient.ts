@@ -15,19 +15,11 @@ export class LLMClient {
   private client: OpenAI;
 
   constructor(config: LLMConfig) {
-    // Remove any whitespace, quotes or newlines from API key
-    const cleanApiKey = config.apiKey?.trim().replace(/["'\n]/g, '');
-    
     this.config = {
       maxTokens: 1000,
       stream: false,
-      ...config,
-      apiKey: cleanApiKey
+      ...config
     };
-
-    if (!this.config.apiKey?.trim() || !this.config.apiKey.startsWith('sk-')) {
-      throw new Error('Invalid API key format. OpenAI API keys should start with "sk-"');
-    }
 
     this.client = new OpenAI({
       apiKey: this.config.apiKey,
