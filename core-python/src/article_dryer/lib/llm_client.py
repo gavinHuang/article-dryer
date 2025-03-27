@@ -14,7 +14,7 @@ from ..types import OutputHandler
 load_dotenv()
 
 class LLMClient:
-    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-3.5-turbo", base_url: Optional[str] = None,
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4o", base_url: Optional[str] = None,
                  max_tokens: int = 1000, stream: bool = False, verify_ssl: bool = True):
         # Try to load API key from multiple possible environment variables
         if api_key is None:

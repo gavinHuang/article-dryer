@@ -12,7 +12,7 @@ class SummarizerPlugin(Plugin):
         
         try:
             self.llm_client = LLMClient(
-                model=config.get('model', 'gpt-4'),
+                model=config.get('model', 'gpt-4o'),
                 base_url=config.get('base_url'),
                 max_tokens=config.get('max_tokens', 1000),
                 stream=config.get('stream', True)

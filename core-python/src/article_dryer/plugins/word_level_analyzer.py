@@ -54,7 +54,7 @@ class WordLevelAnalyzerPlugin(Plugin):
             else:
                 # Pass verify_ssl=False to disable SSL certificate verification
                 self.llm_client = LLMClient(
-                    model=context.get("model", "gpt-3.5-turbo") if context else "gpt-3.5-turbo",
+                    model=context.get("model", "gpt-4o") if context else "gpt-4o",
                     verify_ssl=context.get("verify_ssl", False)  # Disable SSL verification by default
                 )
             # Initialize word level classifier
@@ -129,7 +129,7 @@ class WordLevelAnalyzerPlugin(Plugin):
         )
     
     async def analyze_word_levels(self, words: List[str]) -> Dict[str, Dict[str, Any]]:
-        """Analyze the CEFR level of each word"""
+        """Analyze the CEFR level of each word, keeping only essential info"""
         result = {}
         unknown_words = []
         
@@ -142,11 +142,17 @@ class WordLevelAnalyzerPlugin(Plugin):
             # Get word level info
             word_info = await self.word_level_classifier.get_word_level(word_lower)
             
+            # Simplify the word info to keep only essential data
+            simplified_info = {
+                'level': word_info.get('level', 'unknown'),
+                'type': word_info.get('type', '')  # Include word type if available
+            }
+            
             # If level is unknown and we should use LLM, add to unknown list
-            if word_info.get("level", "").lower() == "unknown" and not self.skip_llm:
+            if simplified_info['level'].lower() == "unknown" and not self.skip_llm:
                 unknown_words.append(word_lower)
                 
-            result[word_lower] = word_info
+            result[word_lower] = simplified_info
             
         # Second pass: classify unknown words with LLM if needed
         if unknown_words and not self.skip_llm:
@@ -155,10 +161,13 @@ class WordLevelAnalyzerPlugin(Plugin):
                 unknown_words, self.llm_client
             )
             
-            # Update results with LLM classifications
+            # Update results with simplified LLM classifications
             for word, info in llm_results.items():
                 if word in result:
-                    result[word] = info
+                    result[word] = {
+                        'level': info.get('level', 'unknown'),
+                        'type': info.get('type', '')  # Include word type if available
+                    }
         
         return result
     

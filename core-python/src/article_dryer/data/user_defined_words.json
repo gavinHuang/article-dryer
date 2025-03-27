@@ -296,7 +296,7 @@
   {
     "word": "s",
     "level": "A1",
-    "explanation": "A common letter used in everyday writing and speech.",
+    "explanation": "The letter 's' is a basic component of the alphabet and foundational for understanding word formation, frequently encountered at the beginner level.",
     "source": "llm"
   },
   {
@@ -344,7 +344,7 @@
   {
     "word": "-",
     "level": "A1",
-    "explanation": "A common punctuation mark used in everyday writing and speech.",
+    "explanation": "Basic punctuation mark used in simple writing.",
     "source": "llm"
   },
   {
@@ -753,6 +753,556 @@
     "word": "email-protection",
     "level": "C1",
     "explanation": "Complex term related to cybersecurity, suitable for advanced learners",
+    "source": "llm"
+  },
+  {
+    "word": "piranesi",
+    "level": "C1",
+    "source": "default"
+  },
+  {
+    "word": "bruno",
+    "level": "C1",
+    "source": "default"
+  },
+  {
+    "word": "postle",
+    "level": "C1",
+    "source": "default"
+  },
+  {
+    "word": "brunopostle",
+    "level": "C1",
+    "source": "default"
+  },
+  {
+    "word": "piranesis-perspective-trick-",
+    "level": "C1",
+    "source": "default"
+  },
+  {
+    "word": "---byline--",
+    "level": "C1",
+    "source": "default"
+  },
+  {
+    "word": "apr",
+    "level": "C1",
+    "source": "default"
+  },
+  {
+    "word": "anytime",
+    "level": "C1",
+    "source": "default"
+  },
+  {
+    "word": "giovanni",
+    "level": "B2",
+    "explanation": "Proper noun, Italian name, may be encountered in educational contexts such as historical or cultural studies.",
+    "source": "llm"
+  },
+  {
+    "word": "battista",
+    "level": "B2",
+    "explanation": "Proper noun, can refer to a common Italian surname or given name, often learned in contexts associated with Italian culture.",
+    "source": "llm"
+  },
+  {
+    "word": "eighteenth",
+    "level": "A2",
+    "explanation": "Basic number-related vocabulary learned in the context of dates or ordering.",
+    "source": "llm"
+  },
+  {
+    "word": "vedute",
+    "level": "C1",
+    "explanation": "Italian term for 'views' or 'scenes', used in art history and cultural studies.",
+    "source": "llm"
+  },
+  {
+    "word": "etchings",
+    "level": "B2",
+    "explanation": "Specialized vocabulary, often learned in the context of art and artistic techniques.",
+    "source": "llm"
+  },
+  {
+    "word": "rome",
+    "level": "A2",
+    "explanation": "Proper noun, a well-known geographical location, commonly known worldwide.",
+    "source": "llm"
+  },
+  {
+    "word": "wasn",
+    "level": "A1",
+    "explanation": "Contraction 'wasn't', basic conversational word.",
+    "source": "llm"
+  },
+  {
+    "word": "veduta",
+    "level": "C1",
+    "explanation": "Italian term used in art and cultural studies to describe highly detailed paintings or drawings.",
+    "source": "llm"
+  },
+  {
+    "word": "del",
+    "level": "C2",
+    "explanation": "Contraction from Romance languages like Italian or Spanish, used in sophisticated linguistic contexts.",
+    "source": "llm"
+  },
+  {
+    "word": "ponte",
+    "level": "B2",
+    "explanation": "Italian word for 'bridge', may be learned in the context of language studies or travel.",
+    "source": "llm"
+  },
+  {
+    "word": "molle",
+    "level": "C2",
+    "explanation": "Rare and specific term, not commonly used in everyday language.",
+    "source": "llm"
+  },
+  {
+    "word": "artistically",
+    "level": "B2",
+    "explanation": "More complex adverb related to creative skills, likely to be encountered by upper intermediate learners.",
+    "source": "llm"
+  },
+  {
+    "word": "stand-out",
+    "level": "B1",
+    "explanation": "Common phrasal expression often used at the intermediate level.",
+    "source": "llm"
+  },
+  {
+    "word": "engravings",
+    "level": "C1",
+    "explanation": "Specific term related to art, encountered in detailed descriptions or discussions.",
+    "source": "llm"
+  },
+  {
+    "word": "identifiable",
+    "level": "B2",
+    "explanation": "Descriptive language used often in various contexts, understood at the upper intermediate level.",
+    "source": "llm"
+  },
+  {
+    "word": "panoramic",
+    "level": "C1",
+    "explanation": "Descriptive term used in more advanced discussions, particularly about views or photography.",
+    "source": "llm"
+  },
+  {
+    "word": "distortions",
+    "level": "C1",
+    "explanation": "Less common and abstract noun, used in more sophisticated contexts or discussions.",
+    "source": "llm"
+  },
+  {
+    "word": "brought",
+    "level": "A1",
+    "explanation": "Basic verb form of 'bring', often used in early language learning.",
+    "source": "llm"
+  },
+  {
+    "word": "draughtsman",
+    "level": "C2",
+    "explanation": "Technical term, not frequently encountered unless in specific fields such as engineering or arts.",
+    "source": "llm"
+  },
+  {
+    "word": "introducing",
+    "level": "A2",
+    "explanation": "Simple form of 'introduce', used in everyday situations and slightly more complex than its base form.",
+    "source": "llm"
+  },
+  {
+    "word": "hugin",
+    "level": "C1",
+    "explanation": "A specialized term related to photography software, not commonly used in everyday language.",
+    "source": "llm"
+  },
+  {
+    "word": "panorama",
+    "level": "B2",
+    "explanation": "A more advanced term related to photography and wider views, typically learned in a specialized context.",
+    "source": "llm"
+  },
+  {
+    "word": "wide-angle",
+    "level": "B1",
+    "explanation": "A term used in photography to describe lenses, somewhat common in discussions of photography.",
+    "source": "llm"
+  },
+  {
+    "word": "didn",
+    "level": "A1",
+    "explanation": "A contraction of 'did not,' commonly used in everyday language.",
+    "source": "llm"
+  },
+  {
+    "word": "photographic",
+    "level": "B2",
+    "explanation": "Related to photography, this term is more specialized and might appear in contexts discussing technology or art.",
+    "source": "llm"
+  },
+  {
+    "word": "curvature",
+    "level": "B2",
+    "explanation": "A term that appears frequently in scientific and mathematical contexts, indicating more advanced learning.",
+    "source": "llm"
+  },
+  {
+    "word": "fisheye",
+    "level": "B1",
+    "explanation": "A term describing a specific type of wide-angle lens in photography, commonly known to enthusiasts.",
+    "source": "llm"
+  },
+  {
+    "word": "panini",
+    "level": "B1",
+    "explanation": "A type of sandwich known in culinary contexts, slightly beyond basic vocabulary.",
+    "source": "llm"
+  },
+  {
+    "word": "vedutismo",
+    "level": "C1",
+    "explanation": "An art movement term that is specialized and not widely used outside art history discussions.",
+    "source": "llm"
+  },
+  {
+    "word": "changing",
+    "level": "A2",
+    "explanation": "A common verb form used in basic everyday language to indicate transformation or substitution.",
+    "source": "llm"
+  },
+  {
+    "word": "created",
+    "level": "A2",
+    "explanation": "The past tense of 'create', often used in simple sentences about making or producing things.",
+    "source": "llm"
+  },
+  {
+    "word": "realising",
+    "level": "B1",
+    "explanation": "Present participle of 'realize', commonly used to describe the process of becoming aware of something.",
+    "source": "llm"
+  },
+  {
+    "word": "radial",
+    "level": "B2",
+    "explanation": "More technical term, often used in contexts related to geometry or design.",
+    "source": "llm"
+  },
+  {
+    "word": "distortion",
+    "level": "C1",
+    "explanation": "Used in both technical and figurative contexts to describe alteration or misrepresentation.",
+    "source": "llm"
+  },
+  {
+    "word": "imperceptible",
+    "level": "C2",
+    "explanation": "Describes something that is impossible or nearly impossible to perceive, advanced descriptive vocabulary.",
+    "source": "llm"
+  },
+  {
+    "word": "enormously",
+    "level": "B2",
+    "explanation": "An adverb used to enhance the degree of something significantly.",
+    "source": "llm"
+  },
+  {
+    "word": "got",
+    "level": "A1",
+    "explanation": "Basic verb form, commonly used in everyday conversation, especially in past tense expressions.",
+    "source": "llm"
+  },
+  {
+    "word": "vincent",
+    "level": "A1",
+    "explanation": "A proper noun, commonly a name, often recognizable due to famous personalities like Vincent van Gogh.",
+    "source": "llm"
+  },
+  {
+    "word": "gogh",
+    "level": "A1",
+    "explanation": "Part of the name 'Vincent van Gogh', often taught early due to his fame as a painter.",
+    "source": "llm"
+  },
+  {
+    "word": "rectilinear",
+    "level": "C2",
+    "explanation": "Technical term used in mathematics and design, describing a straight-line relationship.",
+    "source": "llm"
+  },
+  {
+    "word": "obscura",
+    "level": "C2",
+    "explanation": "Rare and specialized term, often used in academic or technical contexts such as 'camera obscura'.",
+    "source": "llm"
+  },
+  {
+    "word": "receding",
+    "level": "B2",
+    "explanation": "Used to describe something moving back or decreasing, more commonly addressed at the upper intermediate level.",
+    "source": "llm"
+  },
+  {
+    "word": "drawn",
+    "level": "A2",
+    "explanation": "A past participle of 'draw,' frequently encountered in basic language learning, especially in past tense expressions.",
+    "source": "llm"
+  },
+  {
+    "word": "larger",
+    "level": "A1",
+    "explanation": "Common adjective used in basic comparisons, taught early in language courses.",
+    "source": "llm"
+  },
+  {
+    "word": "doesn",
+    "level": "A1",
+    "explanation": "A contraction of 'does not,' frequently used in basic negative statements.",
+    "source": "llm"
+  },
+  {
+    "word": "cram",
+    "level": "B1",
+    "explanation": "A verb often used in informal contexts, such as studying intensely over a short period, learned at intermediate levels.",
+    "source": "llm"
+  },
+  {
+    "word": "legibility",
+    "level": "C1",
+    "explanation": "Refers to the quality of being easy to read, a term encountered in academic or professional settings.",
+    "source": "llm"
+  },
+  {
+    "word": "sizes",
+    "level": "A1",
+    "explanation": "Common noun used to describe dimensions or magnitude, a basic term in everyday contexts.",
+    "source": "llm"
+  },
+  {
+    "word": "involves",
+    "level": "B1",
+    "explanation": "A verb indicating inclusion or participation, typically learned at intermediate levels.",
+    "source": "llm"
+  },
+  {
+    "word": "perpendicular",
+    "level": "B2",
+    "explanation": "A geometric term used to describe lines intersecting at a right angle, typically introduced at upper intermediate levels.",
+    "source": "llm"
+  },
+  {
+    "word": "converge",
+    "level": "C1",
+    "explanation": "This word is used in advanced discussions, often in mathematics and physics, describing things that come together from different directions.",
+    "source": "llm"
+  },
+  {
+    "word": "one-point",
+    "level": "B2",
+    "explanation": "This compound word is often used in the context of technical or artistic discussions, such as one-point perspective in art.",
+    "source": "llm"
+  },
+  {
+    "word": "single-point",
+    "level": "B2",
+    "explanation": "Similar to 'one-point', it is used in more complex or technical descriptions.",
+    "source": "llm"
+  },
+  {
+    "word": "diagonals",
+    "level": "B2",
+    "explanation": "This word is used in intermediate to advanced discussions, often in mathematics or art, describing non-perpendicular lines.",
+    "source": "llm"
+  },
+  {
+    "word": "shown",
+    "level": "A2",
+    "explanation": "This is a frequently used word that students learn early on to describe something visually presented or demonstrated.",
+    "source": "llm"
+  },
+  {
+    "word": "palazzo",
+    "level": "B2",
+    "explanation": "This Italian word for a grand building or mansion may appear in contexts discussing architecture or history.",
+    "source": "llm"
+  },
+  {
+    "word": "odescalchi",
+    "level": "C2",
+    "explanation": "A specialized term likely referring to the Odescalchi family or palace in Italy, not commonly used outside of specific historical or cultural studies.",
+    "source": "llm"
+  },
+  {
+    "word": "diagonal",
+    "level": "B1",
+    "explanation": "This word is fairly common in geometry and is learned during intermediate educational stages.",
+    "source": "llm"
+  },
+  {
+    "word": "engraving",
+    "level": "B2",
+    "explanation": "This is a specialized term often used in the context of art or printmaking, typical of upper-intermediate learners.",
+    "source": "llm"
+  },
+  {
+    "word": "canaletto",
+    "level": "C1",
+    "explanation": "Refers to a specific historical figure and artist, requiring a more advanced understanding of art history.",
+    "source": "llm"
+  },
+  {
+    "word": "photographically",
+    "level": "C1",
+    "explanation": "This word is complex and related to technical or professional contexts.",
+    "source": "llm"
+  },
+  {
+    "word": "st",
+    "level": "A1",
+    "explanation": "Abbreviation of 'street', commonly used in basic address contexts.",
+    "source": "llm"
+  },
+  {
+    "word": "elevation",
+    "level": "B2",
+    "explanation": "Refers to height above a given level, often used in geographical or technical discussions.",
+    "source": "llm"
+  },
+  {
+    "word": "remapped",
+    "level": "C1",
+    "explanation": "Relatively uncommon and technical, involves the process of changing a map or layout.",
+    "source": "llm"
+  },
+  {
+    "word": "usa",
+    "level": "A1",
+    "explanation": "Abbreviation for the United States of America, widely recognized and used in basic geography.",
+    "source": "llm"
+  },
+  {
+    "word": "blurry",
+    "level": "B1",
+    "explanation": "Describes something not clear or distinct, often related to vision or photography.",
+    "source": "llm"
+  },
+  {
+    "word": "legible",
+    "level": "B2",
+    "explanation": "Describes text that is clear enough to read, useful in a variety of contexts.",
+    "source": "llm"
+  },
+  {
+    "word": "horribly",
+    "level": "B1",
+    "explanation": "Adverb form of 'horrible', used to describe something very unpleasant or bad.",
+    "source": "llm"
+  },
+  {
+    "word": "compared",
+    "level": "B1",
+    "explanation": "Commonly used to discuss differences or similarities between items.",
+    "source": "llm"
+  },
+  {
+    "word": "hasn",
+    "level": "B1",
+    "explanation": "Contraction of 'has not', typically used in informal English conversation.",
+    "source": "llm"
+  },
+  {
+    "word": "grown",
+    "level": "A2",
+    "explanation": "Common word related to basic growth and development, often taught at an elementary level.",
+    "source": "llm"
+  },
+  {
+    "word": "mapping",
+    "level": "B1",
+    "explanation": "While a common concept, the technical aspect of 'mapping' is introduced at an intermediate level.",
+    "source": "llm"
+  },
+  {
+    "word": "gimp",
+    "level": "C2",
+    "explanation": "Less common word typically used in specific contexts, such as design or programming.",
+    "source": "llm"
+  },
+  {
+    "word": "homography",
+    "level": "C2",
+    "explanation": "Highly technical vocabulary, not commonly used outside of specialized fields.",
+    "source": "llm"
+  },
+  {
+    "word": "matrix",
+    "level": "B2",
+    "explanation": "Frequently taught in mathematics and science contexts at the upper intermediate level.",
+    "source": "llm"
+  },
+  {
+    "word": "remapping",
+    "level": "C1",
+    "explanation": "Advanced concept often related to technology and specialized fields, requiring deeper understanding.",
+    "source": "llm"
+  },
+  {
+    "word": "prototype",
+    "level": "B2",
+    "explanation": "Word used in business and engineering contexts, learned around upper intermediate studies.",
+    "source": "llm"
+  },
+  {
+    "word": "two-point",
+    "level": "B2",
+    "explanation": "Technical term that often arises in advanced math or technical subjects.",
+    "source": "llm"
+  },
+  {
+    "word": "birds-eye",
+    "level": "B1",
+    "explanation": "Commonly used expression to describe an overview, suitable for intermediate learners.",
+    "source": "llm"
+  },
+  {
+    "word": "aerial",
+    "level": "B2",
+    "explanation": "Related to aviation or geography, typically taught at an upper intermediate stage.",
+    "source": "llm"
+  },
+  {
+    "word": "london",
+    "level": "A1",
+    "explanation": "London is a proper noun referring to a major city and is commonly taught early to English learners.",
+    "source": "llm"
+  },
+  {
+    "word": "redrawn",
+    "level": "B2",
+    "explanation": "Redrawn involves a prefix and past participle, indicating slightly more complexity and likely taught at an intermediate level.",
+    "source": "llm"
+  },
+  {
+    "word": "osm",
+    "level": "C2",
+    "explanation": "OSM is an acronym that stands for OpenStreetMap, and acronyms require a higher level of understanding, often used in specific contexts.",
+    "source": "llm"
+  },
+  {
+    "word": "lineart",
+    "level": "C2",
+    "explanation": "Lineart is a specialized term used in art and potentially complex for learners, indicating proficiency level.",
+    "source": "llm"
+  },
+  {
+    "word": "smaller",
+    "level": "A1",
+    "explanation": "Smaller is a comparative form of small, a basic adjective, and is learned early in language learning.",
     "source": "llm"
   }
 ]

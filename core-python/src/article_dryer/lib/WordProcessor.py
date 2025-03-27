@@ -433,8 +433,8 @@ class WordProcessor:
         return normalized
         
     def extract_words(self, text: str) -> List[str]:
-        """Extract individual words from text, filtering out punctuation and numbers"""
-        # Split text into words using regex
-        # This will match words containing letters, apostrophes but exclude pure numbers
-        words = re.findall(r'\b(?![0-9]+\b)[a-zA-Z\'-]+\b', text)
+        """Extract individual words from text, filtering out punctuation, hyphens, and numbers"""
+        # Split text into words using regex that only allows alphabetic characters
+        # This will match words containing only letters, excluding hyphens, apostrophes, numbers
+        words = re.findall(r'\b[a-zA-Z]+\b', text)
         return [word for word in words if word]
