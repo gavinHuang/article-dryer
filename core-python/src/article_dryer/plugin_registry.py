@@ -1,5 +1,13 @@
-from typing import Dict, Type, Any
+import logging
+import importlib
+import traceback
+from typing import Dict, Any, Type, Optional
+
 from .types import Plugin
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class PluginRegistry:
     _instance = None
@@ -17,13 +25,18 @@ class PluginRegistry:
         self.plugins[name] = plugin_class
 
     def create(self, name: str, options: Dict[str, Any] = None) -> Plugin:
-        if name not in self.plugins:
-            raise ValueError(f"Plugin {name} not found")
-        
-        plugin_class = self.plugins[name]
-        plugin = plugin_class()
-        
-        if options and hasattr(plugin, 'configure'):
-            plugin.configure(options)
+        try:
+            if name not in self.plugins:
+                raise ValueError(f"Plugin {name} not found")
             
-        return plugin
+            plugin_class = self.plugins[name]
+            plugin = plugin_class()
+            
+            if options and hasattr(plugin, 'configure'):
+                plugin.configure(options)
+                
+            return plugin
+        except Exception as e:
+            logger.error(f"Error creating plugin {name}: {str(e)}")
+            traceback.print_exc()
+            raise

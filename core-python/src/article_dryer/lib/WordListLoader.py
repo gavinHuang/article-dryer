@@ -2,6 +2,8 @@ import os
 import json
 import csv
 import logging
+import traceback  # Add traceback import
+import aiofiles
 from typing import Dict, Set, List, Any
 
 from .WordProcessor import WordProcessor
@@ -29,6 +31,7 @@ class WordListLoader:
     Class responsible for loading vocabulary from various sources:
     - Oxford 5000 vocabulary (primary)
     - EPV-deduped vocabulary (secondary)
+    - User-defined words file (tertiary, including LLM-classified words)
     
     This class handles file loading and vocabulary management.
     """
@@ -42,6 +45,7 @@ class WordListLoader:
         self.data_dir = os.path.join(os.path.dirname(__file__), '../data')
         self.word_processor = WordProcessor()
         self.initialized = False
+        self.user_words_file = "user_defined_words.json"
         
     @classmethod
     async def get_instance(cls):
@@ -81,6 +85,9 @@ class WordListLoader:
             
             # Load EPV as a secondary source
             await self.load_epv_words(word_lists)
+            
+            # Load user-defined words as a tertiary source
+            await self.load_user_words(word_lists)
             
             self.word_lists = word_lists
             return self.word_lists
@@ -176,50 +183,128 @@ class WordListLoader:
             logger.error(f'Failed to load EPV words: {error}')
             # Don't raise an error here, as Oxford is our primary source
 
+    async def load_user_words(self, word_lists: WordLists):
+        """Load words from the user-defined words file"""
+        try:
+            user_words_file_path = os.path.join(self.data_dir, self.user_words_file)
+            if not os.path.exists(user_words_file_path):
+                logger.warning("User-defined words file not found, skipping user-defined vocabulary")
+                return
+                
+            logger.info("Loading user-defined vocabulary...")
+            user_data = await self.load_word_file(self.user_words_file)
+            
+            # Process all words in the user data
+            for entry in user_data:
+                # Extract the word and its data from the nested structure
+                word_value = None
+                if isinstance(entry, dict) and 'value' in entry:
+                    word_value = entry.get('value', {})
+                    word = word_value.get('word', '')
+                    level = word_value.get('level', '').lower()
+                elif isinstance(entry, dict) and 'word' in entry:
+                    word = entry.get('word', '')
+                    level = entry.get('level', '').lower()
+                    word_value = entry
+                else:
+                    continue
+                
+                # Skip empty words or invalid levels
+                if not word or level not in word_lists.cefr:
+                    continue
+                
+                # Add to CEFR sets
+                word_lists.cefr[level].add(word.lower())
+                
+                # Add multiple word forms to the word map
+                await self.add_word_forms_to_map(word, word_value, word_lists)
+            
+            logger.info(f"Loaded {sum(len(s) for s in word_lists.cefr.values())} words from user-defined vocabulary")
+            
+        except Exception as error:
+            logger.error(f'Failed to load user-defined words: {error}')
+            # Don't raise an error here, as Oxford is our primary source
+
     async def word_exists_in_any_form(self, word: str, word_lists: WordLists) -> bool:
-        """Check if a word already exists in the word map in any form"""
+        """Check if a word already exists in the word map in its normalized form"""
         # Check base form
         if word.lower() in word_lists.word_map:
             return True
             
-        # Check lemmatized form
-        lemma_form = self.word_processor.process_word(word, "lemma")
-        if lemma_form in word_lists.word_map:
+        # Check normalized form (which handles contractions, possessives, inflections, etc.)
+        normalized_form = self.word_processor.normalize_word(word)
+        if normalized_form in word_lists.word_map:
             return True
             
-        # Check stem form
-        stem_form = self.word_processor.process_word(word, "stem") 
-        if stem_form in word_lists.word_map:
-            return True
-            
-        # Check token form
-        token_form = self.word_processor.process_word(word, "token")
-        if token_form in word_lists.word_map:
-            return True
+        # Check normalized form without spaces
+        normalized_no_spaces = normalized_form.replace(" ", "")
+        for vocab_word in word_lists.word_map.keys():
+            if vocab_word.replace(" ", "") == normalized_no_spaces:
+                return True
             
         return False
 
     async def add_word_forms_to_map(self, word: str, word_value: Dict, word_lists: WordLists) -> None:
-        """Add various forms of a word to the word map"""
+        """Add the normalized form of a word to the word map"""
         word_lower = word.lower()
         
         # Add original form
         word_lists.word_map[word_lower] = word_value
         
-        # Add lemmatized form
-        lemma_form = self.word_processor.process_word(word, "lemma")
-        if lemma_form and lemma_form != word_lower:
-            word_lists.word_map[lemma_form] = word_value
+        # Add normalized form
+        normalized_form = self.word_processor.normalize_word(word)
+        if normalized_form and normalized_form != word_lower:
+            word_lists.word_map[normalized_form] = word_value
+
+    async def save_words_to_user_file(self, words_data: Dict[str, Dict]) -> bool:
+        """
+        Save words data to the user-defined words file.
+        This is used to store word classifications from the LLM.
         
-        # Add stemmed form
-        stem_form = self.word_processor.process_word(word, "stem")
-        if stem_form and stem_form != word_lower and stem_form != lemma_form:
-            word_lists.word_map[stem_form] = word_value
+        Args:
+            words_data: Dictionary mapping words to their classification data
+                        {"word": {"word": "word", "level": "A1", "explanation": "...", "source": "llm"}}
         
-        # Add tokenized form
-        token_form = self.word_processor.process_word(word, "token")
-        if token_form and token_form != word_lower and token_form != lemma_form and token_form != stem_form:
-            word_lists.word_map[token_form] = word_value
+        Returns:
+            bool: True if saved successfully, False otherwise
+        """
+        try:
+            user_words_file_path = os.path.join(self.data_dir, self.user_words_file)
+            existing_data = []
+            
+            # Load existing data if file exists
+            if os.path.exists(user_words_file_path):
+                try:
+                    with open(user_words_file_path, 'r', encoding='utf-8') as f:
+                        existing_data = json.load(f)
+                except json.JSONDecodeError:
+                    logger.warning(f"Invalid JSON in {self.user_words_file}, starting with empty file")
+                    existing_data = []
+            
+            # Convert existing data to a dictionary for easy lookup
+            existing_dict = {}
+            for entry in existing_data:
+                if isinstance(entry, dict) and "word" in entry:
+                    existing_dict[entry["word"].lower()] = entry
+            
+            # Update with new data
+            for word, data in words_data.items():
+                existing_dict[word.lower()] = data
+            
+            # Convert back to list format
+            updated_data = list(existing_dict.values())
+            
+            # Write back to file with proper indentation
+            async with aiofiles.open(user_words_file_path, 'w', encoding='utf-8') as f:
+                await f.write(json.dumps(updated_data, indent=2))
+            
+            logger.info(f"Saved {len(words_data)} words to user-defined words file")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error saving words to user file: {str(e)}")
+            traceback.print_exc()
+            return False
 
     def get_fallback_lists(self) -> WordLists:
         """Create a minimal fallback vocabulary if loading fails"""

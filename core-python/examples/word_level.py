@@ -15,9 +15,11 @@ from pathlib import Path
 # Add project root to path for imports
 sys.path.append(str(Path(__file__).parent.parent))
 
-from src.article_dryer.types import Document
-from src.article_dryer.plugins.TextLevelAnalyzerPlugin import TextLevelAnalyzerPlugin
+from src.article_dryer.types import ContentData
+from src.article_dryer.plugins.word_level_analyzer import WordLevelAnalyzerPlugin
 from src.article_dryer.lib.WordListLoader import WordListLoader
+from src.article_dryer.lib.WordProcessor import WordProcessor
+from src.article_dryer.lib.WordLevelClassifier import WordLevelClassifier
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
@@ -25,17 +27,37 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger(__name__)
 
 async def analyze_text(text, skip_llm=False):
-    """Analyze text using the TextLevelAnalyzerPlugin"""
+    """Analyze text using the WordLevelAnalyzerPlugin"""
+    # Initialize the word processor
+    word_processor = WordProcessor()
+
+    # Initialize the word list loader
+    word_list_loader = await WordListLoader.get_instance()
+    word_lists = await word_list_loader.load_word_lists()
+
+    # Initialize the word level classifier
+    word_level_classifier = WordLevelClassifier(
+        word_processor,
+        word_lists.word_map,
+        word_lists.cefr,
+        word_list_loader.get_data_dir()
+    )
+
     # Initialize the plugin
-    plugin = TextLevelAnalyzerPlugin()
-    await plugin.initialize({"skip_llm": skip_llm})
-    
-    # Create a document
-    document = Document(text=text)
-    
-    # Process the document
-    result = await plugin.process(document, {})
-    
+    plugin = WordLevelAnalyzerPlugin()
+    await plugin.initialize({
+        "word_processor": word_processor,
+        "word_list_loader": word_list_loader,
+        "word_level_classifier": word_level_classifier,
+        "skip_llm": skip_llm
+    })
+
+    # Create a ContentData object instead of Document
+    content_data = ContentData(content=text, metadata={})
+
+    # Process the content data
+    result = await plugin.process(content_data)
+
     return result
 
 async def load_sample_text(file_path=None):
@@ -64,7 +86,7 @@ async def load_sample_text(file_path=None):
 def print_analysis(analysis_result):
     """Print the analysis results in a readable format"""
     # Extract analysis metadata
-    analysis = analysis_result.metadata.get("word_level_analysis", {})
+    analysis = analysis_result.metadata.get("wordLevelAnalysis", {})
     word_levels = analysis.get("word_levels", {})
     level_counts = analysis.get("level_counts", {})
     level_percentages = analysis.get("level_percentages", {})
@@ -119,7 +141,7 @@ def print_analysis(analysis_result):
     print("A1 (Green), A2 (Light Green), B1 (Yellow), B2 (Orange), C1 (Red), C2 (Purple), Unknown (Gray)\n")
     
     # Print a snippet of the highlighted text (without HTML rendering)
-    print(analysis_result.text[:500] + ("..." if len(analysis_result.text) > 500 else ""))
+    print(analysis_result.content[:500] + ("..." if len(analysis_result.content) > 500 else ""))
     
     print("\n" + "="*50)
 

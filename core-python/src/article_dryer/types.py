@@ -12,6 +12,16 @@ class OutputData:
     type: str
     content: Any
 
+@dataclass
+class Document:
+    """Represents a document with text and metadata."""
+    text: str
+    metadata: Dict[str, Any] = None
+
+    def clone(self) -> 'Document':
+        """Create a deep copy of the Document object."""
+        return Document(text=self.text, metadata=self.metadata.copy() if self.metadata else None)
+
 OutputHandler = Callable[[OutputData], Awaitable[None]]
 
 class Plugin(Protocol):
@@ -26,3 +36,5 @@ class PluginConfig(TypedDict):
 class PipelineConfig(TypedDict):
     plugins: List[PluginConfig]
     globalOptions: Dict[str, Any]
+
+PluginContext = Dict[str, Any]

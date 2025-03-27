@@ -1,0 +1,758 @@
+[
+  {
+    "word": "has",
+    "level": "A1",
+    "explanation": "Common verb used in everyday language",
+    "source": "llm"
+  },
+  {
+    "word": "led",
+    "level": "B2",
+    "explanation": "Past tense verb, more complex than basic level",
+    "source": "llm"
+  },
+  {
+    "word": "ai",
+    "level": "B2",
+    "explanation": "Abbreviation for artificial intelligence, more specialized vocabulary",
+    "source": "llm"
+  },
+  {
+    "word": "skeptical",
+    "level": "B2",
+    "explanation": "Higher-level adjective indicating a critical attitude",
+    "source": "llm"
+  },
+  {
+    "word": "taking",
+    "level": "A2",
+    "explanation": "Common present participle verb, used in everyday conversation",
+    "source": "llm"
+  },
+  {
+    "word": "exaggerated",
+    "level": "B2",
+    "explanation": "Complex past participle verb, indicates a higher level of language proficiency",
+    "source": "llm"
+  },
+  {
+    "word": "i've",
+    "level": "A2",
+    "explanation": "Common contraction in everyday speech, appropriate for elementary level",
+    "source": "llm"
+  },
+  {
+    "word": "juxtaposition",
+    "level": "C1",
+    "explanation": "More complex noun, used in academic or professional contexts",
+    "source": "llm"
+  },
+  {
+    "word": "policymakers",
+    "level": "B2",
+    "explanation": "Compound noun, more specialized vocabulary likely learned at upper intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "sharding",
+    "level": "C1",
+    "explanation": "Complex technical term, commonly encountered in database management discussions",
+    "source": "llm"
+  },
+  {
+    "word": "pgvector",
+    "level": "C1",
+    "explanation": "Specialized technical term related to PostgreSQL databases, typically encountered in advanced IT contexts",
+    "source": "llm"
+  },
+  {
+    "word": "url",
+    "level": "A2",
+    "explanation": "Common internet term used in everyday communication",
+    "source": "llm"
+  },
+  {
+    "word": "https",
+    "level": "A2",
+    "explanation": "Common internet term used in everyday communication",
+    "source": "llm"
+  },
+  {
+    "word": "pgdog",
+    "level": "A2",
+    "explanation": "Likely an abbreviation or technical term related to PostgreSQL, encountered in IT contexts at an elementary level",
+    "source": "llm"
+  },
+  {
+    "word": "dev",
+    "level": "B1",
+    "explanation": "Common abbreviation for 'developer', often encountered in work-related and leisure contexts at an intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "sharding-pgvector",
+    "level": "C2",
+    "explanation": "Advanced technical term combining two specialized concepts in database management, typically encountered at a proficiency level",
+    "source": "llm"
+  },
+  {
+    "word": "markdown",
+    "level": "B2",
+    "explanation": "Common term in digital text formatting, encountered in upper-intermediate contexts",
+    "source": "llm"
+  },
+  {
+    "word": "mar",
+    "level": "B1",
+    "explanation": "Possibly referring to a variety of fields (like marketing or IT) at an intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "lev",
+    "level": "B1",
+    "explanation": "Likely an abbreviation or technical term encountered in various contexts at an intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "kokotov",
+    "level": "C2",
+    "explanation": "Specialized technical term outside typical language learning scope",
+    "source": "llm"
+  },
+  {
+    "word": "embeddings",
+    "level": "C1",
+    "explanation": "Specialized technical term, likely introduced in advanced language courses",
+    "source": "llm"
+  },
+  {
+    "word": "ve",
+    "level": "A1",
+    "explanation": "Basic everyday word",
+    "source": "llm"
+  },
+  {
+    "word": "vector",
+    "level": "B2",
+    "explanation": "Specialized technical term, may be introduced in upper intermediate level language courses",
+    "source": "llm"
+  },
+  {
+    "word": "postgres",
+    "level": "C2",
+    "explanation": "Specialized technical term outside typical language learning scope",
+    "source": "llm"
+  },
+  {
+    "word": "indices",
+    "level": "B2",
+    "explanation": "Specialized technical term, may be introduced in upper intermediate level language courses",
+    "source": "llm"
+  },
+  {
+    "word": "workarounds",
+    "level": "B2",
+    "explanation": "Word occasionally used in more complex or technical discussions, may be introduced in upper intermediate level language courses",
+    "source": "llm"
+  },
+  {
+    "word": "sharded",
+    "level": "C1",
+    "explanation": "Specialized technical term, likely introduced in more advanced language courses",
+    "source": "llm"
+  },
+  {
+    "word": "splitting",
+    "level": "B1",
+    "explanation": "Word used in routine or familiar contexts, may be introduced in intermediate language courses",
+    "source": "llm"
+  },
+  {
+    "word": "hnsw",
+    "level": "C2",
+    "explanation": "Highly specialized technical term outside typical language learning scope",
+    "source": "llm"
+  },
+  {
+    "word": "ivfflat",
+    "level": "C2",
+    "explanation": "Advanced academic vocabulary",
+    "source": "llm"
+  },
+  {
+    "word": "vectors",
+    "level": "B2",
+    "explanation": "Upper Intermediate - technical term used in various fields",
+    "source": "llm"
+  },
+  {
+    "word": "multi-dimensional",
+    "level": "C1",
+    "explanation": "Advanced - complex term often used in advanced discussions",
+    "source": "llm"
+  },
+  {
+    "word": "multi-layer",
+    "level": "B2",
+    "explanation": "Upper Intermediate - technical term used in various fields",
+    "source": "llm"
+  },
+  {
+    "word": "trade-off",
+    "level": "B1",
+    "explanation": "Intermediate - common term used in discussions and decision-making",
+    "source": "llm"
+  },
+  {
+    "word": "e",
+    "level": "C2",
+    "explanation": "Proficiency - common in mathematical and scientific contexts",
+    "source": "llm"
+  },
+  {
+    "word": "done",
+    "level": "A1",
+    "explanation": "Basic everyday word",
+    "source": "llm"
+  },
+  {
+    "word": "k-means",
+    "level": "B2",
+    "explanation": "Upper Intermediate - technical term used in data analysis",
+    "source": "llm"
+  },
+  {
+    "word": "algorithm",
+    "level": "B2",
+    "explanation": "Upper Intermediate - commonly used technical term",
+    "source": "llm"
+  },
+  {
+    "word": "sqrt",
+    "level": "B2",
+    "explanation": "Upper Intermediate - mathematical term",
+    "source": "llm"
+  },
+  {
+    "word": "centroids",
+    "level": "C1",
+    "explanation": "Advanced technical term, typically learned at a higher level",
+    "source": "llm"
+  },
+  {
+    "word": "beforehand",
+    "level": "B2",
+    "explanation": "Upper intermediate level word used in various contexts",
+    "source": "llm"
+  },
+  {
+    "word": "generalizable",
+    "level": "C1",
+    "explanation": "Advanced academic vocabulary often used in complex subjects",
+    "source": "llm"
+  },
+  {
+    "word": "algorithms",
+    "level": "B1",
+    "explanation": "Intermediate level term related to familiar topics like technology",
+    "source": "llm"
+  },
+  {
+    "word": "does",
+    "level": "A1",
+    "explanation": "Basic everyday word",
+    "source": "llm"
+  },
+  {
+    "word": "linear-time",
+    "level": "C2",
+    "explanation": "Proficiency level technical term related to advanced concepts",
+    "source": "llm"
+  },
+  {
+    "word": "isn",
+    "level": "A2",
+    "explanation": "Elementary level word commonly used in simple sentences",
+    "source": "llm"
+  },
+  {
+    "word": "d",
+    "level": "A2",
+    "explanation": "Elementary level letter/symbol commonly learned early",
+    "source": "llm"
+  },
+  {
+    "word": "stating",
+    "level": "B2",
+    "explanation": "Upper intermediate level word used in expressing thoughts or arguments",
+    "source": "llm"
+  },
+  {
+    "word": "placing",
+    "level": "B1",
+    "explanation": "Intermediate level word related to everyday tasks or activities",
+    "source": "llm"
+  },
+  {
+    "word": "s",
+    "level": "A1",
+    "explanation": "A common letter used in everyday writing and speech.",
+    "source": "llm"
+  },
+  {
+    "word": "dataset",
+    "level": "B2",
+    "explanation": "Common in technical discussions, higher complexity",
+    "source": "llm"
+  },
+  {
+    "word": "huggingface",
+    "level": "C2",
+    "explanation": "Specialized technical term, advanced academic vocabulary",
+    "source": "llm"
+  },
+  {
+    "word": "cohere",
+    "level": "C1",
+    "explanation": "Less common everyday word, requires higher proficiency",
+    "source": "llm"
+  },
+  {
+    "word": "wikipedia",
+    "level": "B2",
+    "explanation": "Frequently used in general knowledge contexts, moderate complexity",
+    "source": "llm"
+  },
+  {
+    "word": "co",
+    "level": "B1",
+    "explanation": "Commonly used in various contexts, moderate complexity",
+    "source": "llm"
+  },
+  {
+    "word": "datasets",
+    "level": "B2",
+    "explanation": "Frequently used in technical discussions, moderate complexity",
+    "source": "llm"
+  },
+  {
+    "word": "wikipedia-",
+    "level": "B2",
+    "explanation": "Specialized term related to Wikipedia, moderate complexity",
+    "source": "llm"
+  },
+  {
+    "word": "-",
+    "level": "A1",
+    "explanation": "A common punctuation mark used in everyday writing and speech.",
+    "source": "llm"
+  },
+  {
+    "word": "-en-embeddings",
+    "level": "C2",
+    "explanation": "Specialized technical term, advanced academic vocabulary",
+    "source": "llm"
+  },
+  {
+    "word": "encoding",
+    "level": "B2",
+    "explanation": "This word is more technical and related to complex concepts, typically introduced at an upper-intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "english",
+    "level": "A1",
+    "explanation": "Basic everyday word",
+    "source": "llm"
+  },
+  {
+    "word": "embedding",
+    "level": "B2",
+    "explanation": "This word is technical and relates to advanced concepts typically introduced at an upper-intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "semantic",
+    "level": "C1",
+    "explanation": "This word is more advanced and related to complex linguistic concepts, typically introduced at an advanced level",
+    "source": "llm"
+  },
+  {
+    "word": "schema",
+    "level": "B1",
+    "explanation": "This word is related to structure and organization, typically introduced at an intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "calculating",
+    "level": "B1",
+    "explanation": "This word is a common verb, typically introduced at an intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "was",
+    "level": "A1",
+    "explanation": "Basic past tense verb, typically introduced at a beginner level",
+    "source": "llm"
+  },
+  {
+    "word": "ll",
+    "level": "A1",
+    "explanation": "Common contraction, typically introduced at a beginner level",
+    "source": "llm"
+  },
+  {
+    "word": "github",
+    "level": "B1",
+    "explanation": "This word is related to technology and platforms, typically introduced at an intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "repository",
+    "level": "B2",
+    "explanation": "This word is more technical and related to complex concepts, typically introduced at an upper-intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "com",
+    "level": "A1",
+    "explanation": "Basic everyday word",
+    "source": "llm"
+  },
+  {
+    "word": "pgdogdev",
+    "level": "C2",
+    "explanation": "Advanced academic vocabulary",
+    "source": "llm"
+  },
+  {
+    "word": "reduced",
+    "level": "B2",
+    "explanation": "Upper Intermediate level word",
+    "source": "llm"
+  },
+  {
+    "word": "pca",
+    "level": "B2",
+    "explanation": "Upper Intermediate level word",
+    "source": "llm"
+  },
+  {
+    "word": "scikit-learn",
+    "level": "C2",
+    "explanation": "Advanced academic vocabulary",
+    "source": "llm"
+  },
+  {
+    "word": "org",
+    "level": "A1",
+    "explanation": "Basic everyday word",
+    "source": "llm"
+  },
+  {
+    "word": "modules",
+    "level": "B2",
+    "explanation": "Upper Intermediate level word",
+    "source": "llm"
+  },
+  {
+    "word": "generated",
+    "level": "B2",
+    "explanation": "Upper Intermediate level word",
+    "source": "llm"
+  },
+  {
+    "word": "sklearn",
+    "level": "C2",
+    "explanation": "Advanced academic vocabulary",
+    "source": "llm"
+  },
+  {
+    "word": "decomposition",
+    "level": "C1",
+    "explanation": "Advanced word commonly used in academic contexts",
+    "source": "llm"
+  },
+  {
+    "word": "html",
+    "level": "B2",
+    "explanation": "Commonly encountered in the digital age, used in discussing website design and development",
+    "source": "llm"
+  },
+  {
+    "word": "calculated",
+    "level": "B1",
+    "explanation": "Frequently used in everyday conversations and tasks that involve basic math or planning",
+    "source": "llm"
+  },
+  {
+    "word": "purposes",
+    "level": "A2",
+    "explanation": "Common in everyday language when discussing reasons or intentions",
+    "source": "llm"
+  },
+  {
+    "word": "shards",
+    "level": "B2",
+    "explanation": "A slightly more complex word, often used in discussions related to broken objects or crystals",
+    "source": "llm"
+  },
+  {
+    "word": "euclidean",
+    "level": "C1",
+    "explanation": "A term more commonly found in academic or technical discussions, related to geometry and mathematics",
+    "source": "llm"
+  },
+  {
+    "word": "configure",
+    "level": "B2",
+    "explanation": "Regularly used in technology and computer-related contexts, requires some familiarity with software settings",
+    "source": "llm"
+  },
+  {
+    "word": "toml",
+    "level": "C2",
+    "explanation": "A specific technical term used in computer programming and software development, at a high proficiency level",
+    "source": "llm"
+  },
+  {
+    "word": "improves",
+    "level": "A2",
+    "explanation": "A common word used to describe enhancements or progress, frequently encountered in everyday conversations",
+    "source": "llm"
+  },
+  {
+    "word": "utilization",
+    "level": "C1",
+    "explanation": "A more formal term related to maximizing usage, commonly seen in professional or academic contexts",
+    "source": "llm"
+  },
+  {
+    "word": "lookups",
+    "level": "B1",
+    "explanation": "A word often used when searching information, found in general discussions and tasks",
+    "source": "llm"
+  },
+  {
+    "word": "rust",
+    "level": "A2",
+    "explanation": "Common word related to everyday objects and activities",
+    "source": "llm"
+  },
+  {
+    "word": "crate",
+    "level": "A2",
+    "explanation": "Common word related to storage and transportation",
+    "source": "llm"
+  },
+  {
+    "word": "postgresql",
+    "level": "B2",
+    "explanation": "Technical term related to a specific database system, typically encountered in upper intermediate levels",
+    "source": "llm"
+  },
+  {
+    "word": "parser",
+    "level": "B2",
+    "explanation": "Technical term related to computer science, typically encountered in upper intermediate levels",
+    "source": "llm"
+  },
+  {
+    "word": "parse",
+    "level": "B1",
+    "explanation": "Common technical term but can be introduced at intermediate levels",
+    "source": "llm"
+  },
+  {
+    "word": "nearest",
+    "level": "B1",
+    "explanation": "Common word used in everyday contexts and basic technical discussions",
+    "source": "llm"
+  },
+  {
+    "word": "placeholder",
+    "level": "B1",
+    "explanation": "Common technical term but can be introduced at intermediate levels",
+    "source": "llm"
+  },
+  {
+    "word": "caller",
+    "level": "A2",
+    "explanation": "Common word used in everyday conversations",
+    "source": "llm"
+  },
+  {
+    "word": "named",
+    "level": "B1",
+    "explanation": "Common word used in everyday contexts as well as in basic technical discussions",
+    "source": "llm"
+  },
+  {
+    "word": "catalogued",
+    "level": "C1",
+    "explanation": "Less common word used in academic or professional contexts, typically encountered at advanced levels",
+    "source": "llm"
+  },
+  {
+    "word": "locust",
+    "level": "A2",
+    "explanation": "Frequently used word in everyday language, relates to nature and common enough to be learned at an elementary level",
+    "source": "llm"
+  },
+  {
+    "word": "grew",
+    "level": "A1",
+    "explanation": "Basic everyday word related to past tense of 'grow', commonly encountered at a beginner level",
+    "source": "llm"
+  },
+  {
+    "word": "lizard",
+    "level": "A1",
+    "explanation": "Basic everyday word, commonly encountered in nature and easy enough for beginners to learn",
+    "source": "llm"
+  },
+  {
+    "word": "taxonomy",
+    "level": "B2",
+    "explanation": "Medium complexity word often found in discussions about classification and biology, suitable for upper-intermediate learners",
+    "source": "llm"
+  },
+  {
+    "word": "molecular",
+    "level": "B2",
+    "explanation": "Medium complexity word related to chemistry and biology, appropriate for upper-intermediate learners",
+    "source": "llm"
+  },
+  {
+    "word": "vertebrates",
+    "level": "B2",
+    "explanation": "Medium complexity word in the field of biology, suitable for upper-intermediate learners",
+    "source": "llm"
+  },
+  {
+    "word": "pheasant",
+    "level": "A2",
+    "explanation": "Animal-related vocabulary that can be understood at an elementary level",
+    "source": "llm"
+  },
+  {
+    "word": "neighbors",
+    "level": "A1",
+    "explanation": "Basic everyday word that is common in social contexts and learned at a beginner level",
+    "source": "llm"
+  },
+  {
+    "word": "ascending",
+    "level": "B2",
+    "explanation": "Moderately complex word, commonly found in narrative contexts, suitable for upper-intermediate learners",
+    "source": "llm"
+  },
+  {
+    "word": "shard",
+    "level": "B2",
+    "explanation": "Moderately complex word related to fragments or pieces, appropriate for upper-intermediate learners",
+    "source": "llm"
+  },
+  {
+    "word": "getting",
+    "level": "A1",
+    "explanation": "Basic everyday word",
+    "source": "llm"
+  },
+  {
+    "word": "approximation",
+    "level": "C1",
+    "explanation": "Higher-level term used in complex discussions",
+    "source": "llm"
+  },
+  {
+    "word": "outlier",
+    "level": "B2",
+    "explanation": "Word commonly encountered in upper-intermediate level texts",
+    "source": "llm"
+  },
+  {
+    "word": "centroid",
+    "level": "B2",
+    "explanation": "Word typically introduced at upper-intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "trade-offs",
+    "level": "B2",
+    "explanation": "Common term in upper-intermediate language proficiency",
+    "source": "llm"
+  },
+  {
+    "word": "workaround",
+    "level": "B2",
+    "explanation": "Word often encountered at upper-intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "evenly",
+    "level": "B1",
+    "explanation": "Word generally learned at intermediate level",
+    "source": "llm"
+  },
+  {
+    "word": "cross-shard",
+    "level": "C2",
+    "explanation": "Advanced concept usually covered in proficiency level courses",
+    "source": "llm"
+  },
+  {
+    "word": "map-reduce",
+    "level": "C2",
+    "explanation": "Advanced technical term typically learned at the proficiency level",
+    "source": "llm"
+  },
+  {
+    "word": "experimentation",
+    "level": "C1",
+    "explanation": "Higher-level term used in academic and professional contexts",
+    "source": "llm"
+  },
+  {
+    "word": "stacking",
+    "level": "B2",
+    "explanation": "Common in technical discussions and requires some familiarity with the topic",
+    "source": "llm"
+  },
+  {
+    "word": "cosine",
+    "level": "C2",
+    "explanation": "Advanced mathematical concept often encountered in academic and technical contexts",
+    "source": "llm"
+  },
+  {
+    "word": "roadmap",
+    "level": "B1",
+    "explanation": "Frequently used in conversations about planning and projects, suitable for intermediate learners",
+    "source": "llm"
+  },
+  {
+    "word": "simd",
+    "level": "B2",
+    "explanation": "Technical term commonly used in the field of computer science, appropriate for upper intermediate learners",
+    "source": "llm"
+  },
+  {
+    "word": "crunch",
+    "level": "B1",
+    "explanation": "Everyday word that can be understood by intermediate learners, often used in casual conversations",
+    "source": "llm"
+  },
+  {
+    "word": "cdn-cgi",
+    "level": "C2",
+    "explanation": "Technical term related to internet infrastructure, requires a high level of proficiency to understand",
+    "source": "llm"
+  },
+  {
+    "word": "email-protection",
+    "level": "C1",
+    "explanation": "Complex term related to cybersecurity, suitable for advanced learners",
+    "source": "llm"
+  }
+]

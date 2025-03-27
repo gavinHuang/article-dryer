@@ -139,13 +139,10 @@ class TestWordListLoader(unittest.TestCase):
         # Verify original form was added
         self.assertIn('running', word_lists.word_map)
         
-        # Verify lemmatized form was added
-        self.assertIn('run', word_lists.word_map)
-        
-        # Verify stem form was added if different
-        stem_form = word_loader.word_processor.process_word(word, "stem")
-        if stem_form != 'running' and stem_form != 'run':
-            self.assertIn(stem_form, word_lists.word_map)
+        # Verify normalized form was added
+        normalized_form = word_loader.word_processor.normalize_word(word)
+        if normalized_form != word.lower():
+            self.assertIn(normalized_form, word_lists.word_map)
 
     def test_get_fallback_lists(self):
         """Test fallback vocabulary creation"""

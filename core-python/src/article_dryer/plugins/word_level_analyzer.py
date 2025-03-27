@@ -1,184 +1,196 @@
-from typing import Dict, Any, List, Optional, Tuple
 import re
-from ..types import ContentData, OutputData, OutputHandler
-from ..lib.word_list_loader import WordListLoader
+import asyncio
+import logging
+import os
+import traceback  # Add traceback import
+from typing import Dict, List, Any, Set, Optional, Tuple
+from collections import Counter
 
-class WordLevelAnalyzerPlugin:
-    name = "word-level-analyzer"
-    
+from ..types import Plugin, PluginContext, Document, ContentData, OutputHandler
+from ..lib.WordProcessor import WordProcessor
+from ..lib.WordListLoader import WordListLoader
+from ..lib.WordLevelClassifier import WordLevelClassifier
+from ..lib.llm_client import LLMClient
+
+logger = logging.getLogger(__name__)
+
+class WordLevelAnalyzerPlugin(Plugin):
+    name = "text_level_analyzer"
+    """
+    Plugin that analyzes text for CEFR vocabulary levels.
+    This plugin categorizes words based on their CEFR level using:
+    1. Oxford 5000 vocabulary
+    2. EPV vocabulary as a fallback
+    3. LLM as a final fallback for unknown words
+    """
+
     def __init__(self):
-        self.options = {
-            "outputFormat": "inline",  # Options: inline, json, html
-            "includeCounts": True,
-            "includePercentages": True,
-            "includeFullData": False,  # Whether to include full Oxford data
-        }
-        
-    def configure(self, options: Dict[str, Any]) -> None:
-        self.options.update(options)
-        
-    async def process(self, data: ContentData, output_handler: Optional[OutputHandler] = None) -> ContentData:
-        """
-        Process the content and analyze word levels based on CEFR.
-        
-        Args:
-            data: ContentData object containing the text to analyze
-            output_handler: Optional handler for additional output
+        self.word_processor = None
+        self.word_list_loader = None
+        self.word_level_classifier = None
+        self.llm_client = None
+        self.skip_llm = False
+        # self.initialize(context={})
+
+    async def initialize(self, context: PluginContext) -> bool:
+        """Initialize the plugin with word lists and LLM client"""
+        logger.info("Initializing TextLevelAnalyzerPlugin...")
+        try:
+            # Initialize word processor
+            self.word_processor = WordProcessor()
+            logger.info("WordProcessor initialized.")
             
-        Returns:
-            ContentData with the processed content and word level metadata
-        """
-        if not data.content or not isinstance(data.content, str):
+            # Initialize word list loader - await the coroutine here
+            self.word_list_loader = await WordListLoader.get_instance()
+            logger.info("WordListLoader initialized.")
+            
+            # Load word lists
+            word_lists = await self.word_list_loader.load_word_lists()
+            logger.info("Word lists loaded.")
+            
+            # Initialize LLM client
+            if "llm" in context and context["llm"]:
+                self.llm_client = context["llm"]
+            else:
+                # Pass verify_ssl=False to disable SSL certificate verification
+                self.llm_client = LLMClient(
+                    model=context.get("model", "gpt-3.5-turbo") if context else "gpt-3.5-turbo",
+                    verify_ssl=context.get("verify_ssl", False)  # Disable SSL verification by default
+                )
+            # Initialize word level classifier
+            self.word_level_classifier = WordLevelClassifier(
+                self.word_processor,
+                word_lists.word_map,
+                word_lists.cefr,
+                self.word_list_loader.get_data_dir()
+            )
+            logger.info("WordLevelClassifier initialized.")
+            
+            return True
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            logger.error("Error initializing TextLevelAnalyzerPlugin", exc_info=True)
+            return False
+
+    async def process(self, data: ContentData, output_handler: Optional[OutputHandler] = None) -> ContentData:
+        """Process content to classify word levels"""
+        if not data or not data.content:
             return data
             
-        # Get word level analysis
-        word_data = await self._analyze_word_levels(data.content)
+        # Extract content from ContentData
+        text = data.content
         
-        # Extract simple word-level pairs for backward compatibility
-        word_levels = [(item["word"], item["level"].lower()) for item in word_data]
+        # Extract clean words from text
+        all_words = self.word_processor.extract_words(text)
         
-        # Prepare output based on format
-        if self.options["outputFormat"] == "inline":
-            result = await self._format_inline(word_levels)
-        elif self.options["outputFormat"] == "html":
-            result = await self._format_html(word_levels)
-        else:  # Default to JSON structure in the content
-            result = data.content
+        if not all_words:
+            logger.warning("No words found in the text to analyze")
+            return data
             
+        # Analyze word levels
+        word_levels = await self.analyze_word_levels(all_words)
+        
         # Calculate statistics
-        level_stats = self._calculate_statistics(word_levels)
+        level_counts = Counter([info['level'].lower() for info in word_levels.values()])
+        total_words = len(all_words)
+        level_percentages = {level: count / total_words * 100 for level, count in level_counts.items()}
         
-        # Update metadata with word level information
-        if self.options["includeFullData"]:
-            data.metadata["wordLevels"] = {
-                "words": word_data,
-                "statistics": level_stats
-            }
-        else:
-            data.metadata["wordLevels"] = {
-                "words": [{"word": word, "level": level} for word, level in word_levels],
-                "statistics": level_stats
-            }
+        # Prepare analysis results
+        analysis_results = {
+            "word_levels": word_levels,
+            "level_counts": dict(level_counts),
+            "level_percentages": level_percentages,
+            "total_words": total_words,
+            "unknown_words": level_counts.get("unknown", 0),
+        }
         
-        # If we're using inline format, update the content
-        if self.options["outputFormat"] == "inline":
-            data.content = result
+        # Create a text with word levels highlighted for visualization
+        highlighted_text = await self.create_highlighted_text(text, word_levels)
         
-        # Send detailed output if a handler is provided
+        # Send output if handler is provided
         if output_handler:
-            await output_handler(OutputData(
-                type="word-level-analysis",
-                content={
-                    "wordLevels": word_data if self.options["includeFullData"] else word_levels,
-                    "statistics": level_stats,
-                    "formattedText": result if self.options["outputFormat"] != "json" else None
+            await output_handler({
+                'type': 'json',
+                'content': {
+                    'wordLevelAnalysis': analysis_results,
+                    'message': f"Word level analysis complete: {total_words} words analyzed, {level_counts.get('unknown', 0)} unknown words"
                 }
-            ))
-            
-        return data
+            })
+        
+        # Return updated ContentData with metadata
+        return ContentData(
+            content=data.content,
+            metadata={
+                **data.metadata,
+                'wordLevelAnalysis': analysis_results,
+                'wordLevelHighlighted': highlighted_text
+            }
+        )
     
-    async def _analyze_word_levels(self, text: str) -> List[Dict[str, Any]]:
-        """
-        Analyze the CEFR level and other properties of each word in the text.
+    async def analyze_word_levels(self, words: List[str]) -> Dict[str, Dict[str, Any]]:
+        """Analyze the CEFR level of each word"""
+        result = {}
+        unknown_words = []
         
-        Args:
-            text: The input text to analyze
-            
-        Returns:
-            List of dictionaries with word data including CEFR level
-        """
-        # Get the word list loader instance
-        loader = await WordListLoader.get_instance()
-        
-        # Tokenize the text while preserving the original words
-        tokens = re.findall(r'\b[\w\']+\b|[^\w\s]', text)
-        
-        # Create a list to store word data
-        word_data = []
-        
-        for token in tokens:
-            # Skip non-word tokens
-            if not re.match(r'^[a-zA-Z]', token):
-                continue
+        # First pass: check all words against the word list
+        for word in words:
+            word_lower = word.lower()
+            if word_lower in result:
+                continue  # Skip duplicates
                 
-            # Get all data for this word
-            word_info = await loader.get_word_level(token)
+            # Get word level info
+            word_info = await self.word_level_classifier.get_word_level(word_lower)
             
-            # Prepare the result object with the original token
-            result = {
-                "word": token,
-                "level": word_info.get("level", "unknown").lower()
-            }
+            # If level is unknown and we should use LLM, add to unknown list
+            if word_info.get("level", "").lower() == "unknown" and not self.skip_llm:
+                unknown_words.append(word_lower)
+                
+            result[word_lower] = word_info
             
-            # Include additional information if available
-            if self.options["includeFullData"]:
-                for key, value in word_info.items():
-                    if key not in result:
-                        result[key] = value
+        # Second pass: classify unknown words with LLM if needed
+        if unknown_words and not self.skip_llm:
+            logger.info(f"Classifying {len(unknown_words)} unknown words with LLM")
+            llm_results = await self.word_level_classifier.classify_unknown_words_with_llm(
+                unknown_words, self.llm_client
+            )
             
-            word_data.append(result)
+            # Update results with LLM classifications
+            for word, info in llm_results.items():
+                if word in result:
+                    result[word] = info
         
-        return word_data
+        return result
     
-    async def _format_inline(self, word_levels: List[Tuple[str, str]]) -> str:
-        """Format the word levels as inline text with annotations."""
-        result = ""
-        for word, level in word_levels:
-            result += f"{word} [{level.upper()}] "
-        return result.strip()
-    
-    async def _format_html(self, word_levels: List[Tuple[str, str]]) -> str:
-        """Format the word levels as HTML with color-coded spans."""
-        level_colors = {
-            'a1': '#28a745',  # Green
-            'a2': '#5cb85c',  # Light green
-            'b1': '#ffc107',  # Yellow
-            'b2': '#fd7e14',  # Orange
-            'c1': '#dc3545',  # Red
-            'c2': '#9c27b0',  # Purple
-            'unknown': '#6c757d'  # Gray
+    async def create_highlighted_text(self, text: str, word_levels: Dict[str, Dict[str, Any]]) -> str:
+        """Create a version of the text with words color-coded by level"""
+        # Define color mappings for each CEFR level
+        color_map = {
+            "a1": "#28a745",  # Green for A1
+            "a2": "#5cb85c",  # Light Green for A2
+            "b1": "#ffc107",  # Yellow for B1
+            "b2": "#fd7e14",  # Orange for B2
+            "c1": "#dc3545",  # Red for C1
+            "c2": "#9c27b0",  # Purple for C2
+            "unknown": "#6c757d"  # Gray for unknown
         }
         
-        html = ""
-        for word, level in word_levels:
-            color = level_colors.get(level, '#6c757d')
-            html += f'<span title="{level.upper()}" style="color: {color}; font-weight: {500 if level in ["c1", "c2"] else "normal"}">{word}</span> '
+        # Create HTML version with colored spans
+        highlighted_text = text
         
-        return html.strip()
-    
-    def _calculate_statistics(self, word_levels: List[Tuple[str, str]]) -> Dict[str, Any]:
-        """Calculate statistics about word levels."""
-        # Count words by level
-        level_counts = {'a1': 0, 'a2': 0, 'b1': 0, 'b2': 0, 'c1': 0, 'c2': 0, 'unknown': 0}
-        for _, level in word_levels:
-            level_counts[level] += 1
+        # Sort words by length (longest first) to avoid substring replacement issues
+        sorted_words = sorted(word_levels.keys(), key=len, reverse=True)
         
-        total_words = len(word_levels)
+        for word in sorted_words:
+            level = word_levels[word].get("level", "unknown").lower()
+            if level not in color_map:
+                level = "unknown"
+                
+            color = color_map[level]
+            
+            # Replace whole words only using regex (with word boundaries)
+            pattern = r'\b' + re.escape(word) + r'\b'
+            replacement = f'<span style="color:{color}" title="{level.upper()}">{word}</span>'
+            highlighted_text = re.sub(pattern, replacement, highlighted_text, flags=re.IGNORECASE)
         
-        # Calculate percentages
-        level_percentages = {}
-        for level, count in level_counts.items():
-            level_percentages[level] = (count / total_words) * 100 if total_words > 0 else 0
-        
-        # Group by difficulty
-        elementary = level_counts['a1'] + level_counts['a2']
-        intermediate = level_counts['b1'] + level_counts['b2']
-        advanced = level_counts['c1'] + level_counts['c2']
-        
-        return {
-            "counts": level_counts,
-            "percentages": level_percentages,
-            "totalWords": total_words,
-            "groupedCounts": {
-                "elementary": elementary,
-                "intermediate": intermediate,
-                "advanced": advanced,
-                "unknown": level_counts['unknown']
-            },
-            "groupedPercentages": {
-                "elementary": (elementary / total_words) * 100 if total_words > 0 else 0,
-                "intermediate": (intermediate / total_words) * 100 if total_words > 0 else 0,
-                "advanced": (advanced / total_words) * 100 if total_words > 0 else 0,
-                "unknown": (level_counts['unknown'] / total_words) * 100 if total_words > 0 else 0
-            }
-        }
+        return highlighted_text

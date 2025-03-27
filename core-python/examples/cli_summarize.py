@@ -11,6 +11,9 @@ sys.path.append(str(Path(__file__).parent.parent))
 from article_dryer.pipeline import Pipeline
 from article_dryer.plugins.jina_reader import JinaReaderPlugin
 from article_dryer.plugins.summarizer import SummarizerPlugin
+from article_dryer.plugins.text_statistics import TextStatisticsPlugin
+from article_dryer.plugins.word_level_analyzer import WordLevelAnalyzerPlugin
+from article_dryer.lib.llm_client import LLMClient
 
 # Load environment variables
 load_dotenv()
@@ -50,17 +53,32 @@ async def main():
         # Validate environment variables first
         validate_environment()
 
-        # Configure pipeline with plugins
-        pipeline = Pipeline()
-        pipeline.add_plugin(JinaReaderPlugin(skip_images=True))
-        pipeline.add_plugin(SummarizerPlugin(config={
-            'api_key': os.getenv('OPENAI_API_KEY'),
-            'model': os.getenv('OPENAI_MODEL', 'gpt-4'),
-            # 'base_url': os.getenv('OPENAI_API_BASE_URL'),
+        # Create plugins with proper initialization
+        jina_plugin = JinaReaderPlugin(skip_images=True)
+        text_stats_plugin = TextStatisticsPlugin()
+        
+        # Create LLM client with SSL verification disabled and timeout
+        # llm_client = LLMClient(verify_ssl=False)
+        
+        # Create and initialize WordLevelAnalyzerPlugin with the LLM client
+        word_level_plugin = WordLevelAnalyzerPlugin()
+        await word_level_plugin.initialize(context={})
+        
+        # Create summarizer plugin with correct configuration
+        # Don't include the LLM client directly in the config dictionary
+        summarizer_plugin = SummarizerPlugin(config={
             'stream': True,
             'max_tokens': 1000
-            }
-        ))
+        })
+        # Set the LLM client separately if needed
+        # summarizer_plugin.llm_client = llm_client
+
+        # Configure pipeline with plugins
+        pipeline = Pipeline()
+        pipeline.add_plugin(jina_plugin)
+        pipeline.add_plugin(text_stats_plugin)
+        pipeline.add_plugin(word_level_plugin)
+        pipeline.add_plugin(summarizer_plugin)
         pipeline.set_output_handler(output_handler)
 
         # Get URL input

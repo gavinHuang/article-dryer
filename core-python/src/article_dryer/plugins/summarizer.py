@@ -1,4 +1,5 @@
 from typing import Dict, Any, Optional
+import os
 from datetime import datetime
 from ..types import Plugin, ContentData, OutputHandler
 from ..lib.llm_client import LLMClient
@@ -6,13 +7,11 @@ from ..lib.llm_client import LLMClient
 class SummarizerPlugin(Plugin):
     name = 'summarizer'
     
-    def __init__(self, config: Dict[str, Any]):
-        if not config.get('api_key'):
-            raise ValueError('API key is required for SummarizerPlugin. Set OPENAI_API_KEY environment variable.')
+    def __init__(self, config: Dict[str, Any] = None):
+        config = config or {}
         
         try:
             self.llm_client = LLMClient(
-                api_key=config['api_key'],
                 model=config.get('model', 'gpt-4'),
                 base_url=config.get('base_url'),
                 max_tokens=config.get('max_tokens', 1000),

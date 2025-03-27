@@ -2,6 +2,7 @@ import os
 import re
 import json
 import logging
+import traceback  # Add traceback import
 import aiofiles
 from typing import Dict, List, Any, Set, Optional
 
@@ -37,26 +38,17 @@ class WordLevelClassifier:
         # Normalize the word first
         normalized_word = self.word_processor.normalize_word(word)
         
-        # First check the word itself
+        # Check if the normalized word is in our word map
         if normalized_word in self.word_map:
             return self.word_map[normalized_word]
-            
-        # Try the lemmatized form (most accurate for analysis)
-        lemma_form = self.word_processor.process_word(normalized_word, "lemma")
-        if lemma_form in self.word_map:
-            return self.word_map[lemma_form]
-            
-        # Try the stemmed form
-        stem_form = self.word_processor.process_word(normalized_word, "stem")
-        if stem_form in self.word_map:
-            return self.word_map[stem_form]
-        
-        # Try the tokenized form
-        token_form = self.word_processor.process_word(normalized_word, "token")
-        if token_form in self.word_map:
-            return self.word_map[token_form]
+         
+        # Check if any variant after normalization exists - compare without spaces
+        normalized_no_spaces = normalized_word.replace(" ", "")
+        for vocab_word, info in self.word_map.items():
+            if vocab_word.replace(" ", "") == normalized_no_spaces:
+                return info
                 
-        # If still no match is found, return unknown
+        # If no match is found, return unknown
         return {
             "word": word,
             "level": "unknown",
@@ -93,13 +85,15 @@ class WordLevelClassifier:
                 self.cefr_sets[level].add(word.lower())
                 self.word_map[word.lower()] = data
                 
-                # Also add processed forms
-                lemma = self.word_processor.process_word(word, "lemma")
-                stem = self.word_processor.process_word(word, "stem")
-                if lemma != word.lower():
-                    self.word_map[lemma] = data
-                if stem != word.lower() and stem != lemma:
-                    self.word_map[stem] = data
+                # Also add normalized form
+                normalized_word = self.word_processor.normalize_word(word)
+                if normalized_word != word.lower():
+                    self.word_map[normalized_word] = data
+        
+        # Save the classification results to the user-defined words file
+        from .WordListLoader import WordListLoader
+        word_list_loader = await WordListLoader.get_instance()
+        await word_list_loader.save_words_to_user_file(results)
                 
         return results
         
@@ -140,7 +134,7 @@ For each word, provide the level and a brief explanation in this JSON format:
 
         try:
             # Call the LLM
-            response = await llm_client.generate_text(prompt)
+            response = await llm_client.generate_response(content = prompt, system_prompt="Classify words by CEFR level")
             
             # Extract JSON from response
             match = re.search(r'({.*})', response.replace('\n', ''))
@@ -176,6 +170,8 @@ For each word, provide the level and a brief explanation in this JSON format:
         
         except Exception as e:
             logger.error(f"Error using LLM to classify words: {e}")
+            traceback.print_exc()
+            # logger.info("Using default classification for unknown words")
             # Default to C1 for all words in case of error
             return {word.lower(): {"word": word.lower(), "level": "C1", "source": "default"} for word in words}
 

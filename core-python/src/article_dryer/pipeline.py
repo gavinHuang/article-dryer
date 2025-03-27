@@ -1,9 +1,16 @@
 import json
 import yaml
-from typing import List, Optional, Dict, Any
+import logging
+import asyncio
+import traceback
+from typing import List, Optional, Dict, Any, Union
 from .types import Plugin, ContentData, OutputHandler, PipelineConfig
 from .plugin_registry import PluginRegistry
 from .lib.web_adapter import WebRequest, WebResponse, WebOutputAdapter, WebStreamHandler
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class Pipeline:
     def __init__(self, plugins: List[Plugin] = None, output_handler: Optional[OutputHandler] = None):
@@ -76,6 +83,10 @@ class Pipeline:
             try:
                 data = await plugin.process(data, self.output_handler)
             except Exception as err:
+                # Print detailed stack trace
+                traceback.print_exc()
+                logger.error(f"Error processing plugin {plugin.name}: {str(err)}", exc_info=True)
+                
                 if self.output_handler:
                     await self.output_handler({
                         'type': 'error',
